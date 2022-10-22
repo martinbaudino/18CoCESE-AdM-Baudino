@@ -1,2 +1,2 @@
 # 18CoCESE-AdM-Baudino
-## Repositorio público correspondiente a "Arquitectura de Microprocesadores", BAUDINO, Martín - 2022
+## Repositorio público de "Arquitectura de Microprocesadores" - BAUDINO, Martín - 2022
