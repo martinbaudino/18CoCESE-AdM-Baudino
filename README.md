@@ -1,9 +1,10 @@
 # 18CoCESE-AdM-Baudino - repositorio público
 ## *Arquitectura de Microprocesadores* - Carrera de Especialización en Sistemas Embebidos - Universidad de Buenos Aires - BAUDINO, Martín - 2022
 
-Preguntas orientadoras
+### Preguntas orientadoras
 1. Describa brevemente los diferentes perfiles de familias de microprocesadores/microcontroladores de ARM. Explique alguna de sus diferencias características.
-Cortex M
+
+### Cortex M
 1. Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4.
 2. ¿Por qué se dice que el set de instrucciones Thumb permite mayor densidad de código? Explique
 3. ¿Qué entiende por arquitectura load-store? ¿Qué tipo de instrucciones no posee este tipo de arquitectura?
@@ -27,7 +28,8 @@ Cortex M
 19. ¿Cuántas regiones pueden configurarse como máximo? ¿Qué ocurre en caso de haber solapamientos de las regiones? ¿Qué ocurre con las zonas de memoria no cubiertas por las regiones definidas?
 20. ¿Para qué se suele utilizar la excepción PendSV? ¿Cómo se relaciona su uso con el resto de las excepciones? Dé un ejemplo
 21. ¿Para qué se suele utilizar la excepción SVC? Expliquelo dentro de un marco de un sistema operativo embebido.
-ISA
+
+### ISA
 1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo
 2. ¿Para qué se utiliza el sufijo ‘s’? Dé un ejemplo
 3. ¿Qué utilidad tiene la implementación de instrucciones de aritmética saturada? Dé un ejemplo con operaciones con datos de 8 bits.
