@@ -10,6 +10,7 @@ La empresa ARM divide su oferta de procesadores (CPUs) Cortex en en tres perfile
 - **Cortex-M** son núcleos pensados para ser utilizados como **Microcontroladores** de 32-bits que pueden ser programados en C directamente generando alta densidad de código.
 
 ### Cortex M
+
 1. Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4.
 
 Los procesadores Cortex M0 y M0+ tienen un set reducido de instrucciones para optimizar el consumo energético y el costo de fabricación. Las familias M3 y M4 implementan los sets de instrucciones Thumb completos y ofrecen mayor performance y funcionalidades.
@@ -28,11 +29,11 @@ La familia utiliza direcciones de 32 bits y un espacio de direccionamiento de me
 
 5. ¿Qué ventajas presenta el uso de los “shadowed pointers” del PSP y el MSP?
 
-
+Permite configurar a un Sistema Operativo para que utilice el Puntero a la Pila Principal (MSP) y las aplicaciones de usuario (tareas) para que utilicen el Puntero a la Pila de Procesos (PSP). De esa manera el OS tiene garantizada la gestión de la Pila Principal y el cambio de la pila en uso se realiza automáticamente en la gestión de excepciones.
 
 6. Describa los diferentes modos de privilegio y operación del Cortex M, sus relaciones y como se conmuta de uno al otro. Describa un ejemplo en el que se pasa del modo privilegiado a no priviligiado y nuevamente a privilegiado.
 
-
+Los modos de operación se dividen en **Handler** (dentro de manejadores de excepción) y **Thread** (ejecución normal del código de aplicación). El modo **Thread** puede tener nivel de acceso privilegiado o no privilegiado, mientras que el modo **Handler** siempre tiene nivel de acceso privilegiado. La separación en niveles de acceso privilegiado y no privilegiado define dos tipos de permisos de acceso a áreas de memoria y también el acceso a instrucciones especiales. Como ejemplo, un RTOS se ejecuta en modo **Thread** con acceso privilegiado y la mayoría de las tareas en modo **Thread** con acceso no privilegiado. La interrupción del SysTick se utiliza para suspender una tarea de ejecución y pasar al modo **Handler** y luego de esa manera devolverle la ejecución al RTOS.
 
 7. ¿Qué se entiende por modelo de registros ortogonal? Dé un ejemplo
 
@@ -97,6 +98,7 @@ La familia utiliza direcciones de 32 bits y un espacio de direccionamiento de me
 23. ¿Para qué se suele utilizar la excepción SVC? Expliquelo dentro de un marco de un sistema operativo embebido.
 
 ### ISA
+
 1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo
 
 
