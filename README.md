@@ -2,12 +2,12 @@
 ## **Arquitectura de Microprocesadores** - Carrera de Especialización en Sistemas Embebidos - Universidad de Buenos Aires - BAUDINO, Martín - 2022
 
 ### Preguntas orientadoras
-1. Describa brevemente los diferentes perfiles de familias de microprocesadores/microcontroladores de ARM. Explique alguna de sus diferencias características.
+  1. Describa brevemente los diferentes perfiles de familias de microprocesadores/microcontroladores de ARM. Explique alguna de sus diferencias características.
 
-La empresa ARM divide su oferta de procesadores (CPUs) Cortex en en tres perfiles: 
-- **Cortex-A** para **Aplicaciones** que utilizan Sistemas Operativos de Propósitos Generales (GPOSs), para los que proveen una Unidad de Manejo de Memoria (MMU).
-- **Cortex-R** para aplicaciones de seguridad crítica y tiempo **Real**, con características distintivas como Memoria Estrechamente Acoplada (TCM) y menejo determinístico de interrupciones.
-- **Cortex-M** son núcleos pensados para ser utilizados como **Microcontroladores** de 32-bits que pueden ser programados en C directamente generando alta densidad de código.
+  La empresa ARM divide su oferta de procesadores (CPUs) Cortex en en tres perfiles: 
+  - **Cortex-A** para **Aplicaciones** que utilizan Sistemas Operativos de Propósitos Generales (GPOSs), para los que proveen una Unidad de Manejo de Memoria (MMU).
+  - **Cortex-R** para aplicaciones de seguridad crítica y tiempo **Real**, con características distintivas como Memoria Estrechamente Acoplada (TCM) y menejo determinístico de interrupciones.
+  - **Cortex-M** son núcleos pensados para ser utilizados como **Microcontroladores** de 32-bits que pueden ser programados en C directamente generando alta densidad de código.
 
 ### Cortex M
 1. Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4.
