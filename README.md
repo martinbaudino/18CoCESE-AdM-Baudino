@@ -4,6 +4,18 @@
 ### Preguntas orientadoras
 1. Describa brevemente los diferentes perfiles de familias de microprocesadores/microcontroladores de ARM. Explique alguna de sus diferencias características.
 
+La empresa ARM divide su oferta de procesadores (CPUs) Cortex en en tres perfiles: 
+- **Cortex-A** para **Aplicaciones** que utilizan Sistemas Operativos de Propósitos Generales (GPOSs), para los que proveen una Unidad de Manejo de Memoria (MMU).
+- **Cortex-R** para aplicaciones de seguridad crítica y tiempo **Real**, con características distintivas como Memoria Estrechamente Acoplada (TCM) y menejo determinístico de interrupciones.
+- **Cortex-M** son núcleos pensados para ser utilizados como **Microcontroladores** de 32-bits
+
+CortexA(Application)
+Procesadoresdealtorendimientoorientadosalaimplementacióndesistemasoperativosensistemasembebidosdealtaperformance
+CortexR(Realtime)
+Procesadoresorientadosasistemasdetiemporealdondeprimalanecesidaddeimplementarsolucionesdebajalatenciayaltacapacidaddeprocesamiento
+CortexM(Microcontrollers)
+Procesadoresorientadosadispositivosdeconsumomasivoysistemasembebidoscompactos(diseñadosparaaltadensidaddecódigoyprogramaciónenC)
+
 ### Cortex M
 1. Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4.
 2. ¿Por qué se dice que el set de instrucciones Thumb permite mayor densidad de código? Explique
