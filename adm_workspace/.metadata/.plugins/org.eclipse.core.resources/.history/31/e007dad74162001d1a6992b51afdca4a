@@ -63,10 +63,7 @@ static void MX_ETH_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 /* USER CODE BEGIN PFP */
-// Ejercicio 1
 void zeros (uint32_t * vector, uint32_t longitud);
-// Ejercicio 2
-void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longitud, uint32_t escalar);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -125,20 +122,9 @@ static void PrivilegiosSVC (void)
 
     // Fin del ejemplo de SVC
 }
-// Ejercicio 1
+
 void zeros (uint32_t * vector, uint32_t longitud){
 	memset(vector, 0, longitud*sizeof(*vector));
-}
-
-// Ejercicio 2
-void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longitud, uint32_t escalar){
-
-	int32_t i;
-
-	for(i=0; i<longitud; i++){
-		vectorOut[i] = vectorIn[i] * escalar;
-	}
-
 }
 /* USER CODE END 0 */
 
@@ -178,21 +164,9 @@ int main(void)
 
   const uint32_t Resultado = asm_sum (5, 3);
 
-  // Ejercicio 1
   uint32_t p_vect_zeros[ARR_SIZE];
 
   zeros(p_vect_zeros, ARR_SIZE);
-  // Fin Ejercicio 1
-
-  // Ejercicio 2
-  uint32_t vec_orig[] = {5, 9, 25, 37, 1 };
-  uint32_t tam_vec = sizeof(vec_orig) / sizeof(*vec_orig);
-
-  uint32_t vec_result[tam_vec];
-
-  productoEscalar32(vec_orig, vec_result, tam_vec, 7);
-  // Fin Ejercicio 2
-
 
   /* USER CODE END 2 */
 

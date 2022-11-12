@@ -186,7 +186,7 @@ int main(void)
 
   // Ejercicio 2
   uint32_t vec_orig[] = {5, 9, 25, 37, 1 };
-  uint32_t tam_vec = sizeof(vec_orig) / sizeof(*vec_orig);
+  uint32_t tam_vec = sizeof(vec_orig);
 
   uint32_t vec_result[tam_vec];
 

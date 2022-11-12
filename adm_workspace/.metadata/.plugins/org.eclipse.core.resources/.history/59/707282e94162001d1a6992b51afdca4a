@@ -186,11 +186,11 @@ int main(void)
 
   // Ejercicio 2
   uint32_t vec_orig[] = {5, 9, 25, 37, 1 };
-  uint32_t tam_vec = sizeof(vec_orig) / sizeof(*vec_orig);
+  uint32_t vec_result = sizeof(vec_orig);
 
-  uint32_t vec_result[tam_vec];
+  uint32_t final[tam];
 
-  productoEscalar32(vec_orig, vec_result, tam_vec, 7);
+  productoEscalar32(vec_orig, vec_result, tam, 7);
   // Fin Ejercicio 2
 
 
