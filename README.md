@@ -42,7 +42,7 @@ Cuando se habla de ortogonal en este contexto se refiere a que el tipo de instru
 
 8. ¿Qué ventajas presenta el uso de intrucciones de ejecución condicional (IT)? Dé un ejemplo
 
-
+La principal ventja es evitar que que se reinicie el pipeline, con lo que se perderían 3 instrucciones/ciclos. Por ello para que tenga sentido se deben utilizar como mucho 2 o 3 instrucciones. Si se ignoran más de 3 intrucciones sería lo mismo que hacer un salto.
 
 9. Describa brevemente las excepciones más prioritarias (reset, NMI, Hardfault).
 
