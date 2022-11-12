@@ -36,6 +36,7 @@ Permite configurar a un Sistema Operativo para que utilice el Puntero a la Pila 
 Los modos de operación se dividen en **Handler** (dentro de manejadores de excepción) y **Thread** (ejecución normal del código de aplicación). El modo **Thread** puede tener nivel de acceso privilegiado o no privilegiado, mientras que el modo **Handler** siempre tiene nivel de acceso privilegiado. La separación en niveles de acceso privilegiado y no privilegiado define dos tipos de permisos de acceso a áreas de memoria y también el acceso a instrucciones especiales. Como ejemplo, un RTOS se ejecuta en modo **Thread** con acceso privilegiado y la mayoría de las tareas en modo **Thread** con acceso no privilegiado. La interrupción del SysTick se utiliza para suspender una tarea de ejecución y pasar al modo **Handler** y luego de esa manera devolverle la ejecución al RTOS.
 
 7. ¿Qué se entiende por modelo de registros ortogonal? Dé un ejemplo
+
 Cuando se habla de ortogonal en este contexto se refiere a que el tipo de instrucción y los modos de direccionamiento varían de manera indipendiente, análogo a variables independientes en un sistema de coordenadas ortogonales. El resultado de esto es que todos los tipos de instrucciones pueden utilizar todos los tipos de direccionamiento de memoria.
 
 
