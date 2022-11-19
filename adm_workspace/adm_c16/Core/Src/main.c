@@ -133,12 +133,9 @@ void zeros (uint32_t * vector, uint32_t longitud){
 // Ejercicio 2
 void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longitud, uint32_t escalar){
 
-	int32_t i;
-
-	for(i=0; i<longitud; i++){
+	for(int32_t i=0; i<longitud; i++){
 		vectorOut[i] = vectorIn[i] * escalar;
 	}
-
 }
 /* USER CODE END 0 */
 
