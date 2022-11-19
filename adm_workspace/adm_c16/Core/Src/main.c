@@ -65,8 +65,16 @@ static void MX_USB_OTG_FS_PCD_Init(void);
 /* USER CODE BEGIN PFP */
 // Ejercicio 1
 void zeros (uint32_t * vector, uint32_t longitud);
+
 // Ejercicio 2
 void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longitud, uint32_t escalar);
+
+//Ejercicio 3
+void productoEscalar16 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar);
+
+// Ejercicio 4
+void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -137,6 +145,29 @@ void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longi
 		vectorOut[i] = vectorIn[i] * escalar;
 	}
 }
+
+// Ejercicio 3
+void productoEscalar16 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar){
+	for(int32_t i=0; i<longitud; i++){
+		vectorOut[i] = vectorIn[i] * escalar;
+	}
+}
+
+// Ejercicio 4
+#define MAX_UINT12 0xFFF
+void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar){
+	uint16_t max_mult = MAX_UINT12 / escalar;
+	for(int32_t i=0; i<longitud; i++){
+		if( escalar != 0 && vectorIn[i] < max_mult){
+			vectorOut[i] = vectorIn[i] * escalar;
+		}
+		else {
+			vectorOut[i] = MAX_UINT12;
+		}
+	}
+}
+
+
 /* USER CODE END 0 */
 
 /**
@@ -182,13 +213,33 @@ int main(void)
   // Fin Ejercicio 1
 
   // Ejercicio 2
-  uint32_t vec_orig[] = {5, 9, 25, 37, 1 };
-  uint32_t tam_vec = sizeof(vec_orig) / sizeof(*vec_orig);
+  uint32_t vec_orig2[] = {5, 9, 25, 37, 1 };
+  uint32_t tam_vec2 = sizeof(vec_orig2) / sizeof(*vec_orig2);
 
-  uint32_t vec_result[tam_vec];
+  uint32_t vec_result2[tam_vec2];
 
-  productoEscalar32(vec_orig, vec_result, tam_vec, 7);
+  productoEscalar32(vec_orig2, vec_result2, tam_vec2, 7);
   // Fin Ejercicio 2
+
+  // Ejercicio 3
+  uint16_t vec_orig3[] = {5, 9, 25, 37, 1 };
+  uint32_t tam_vec3 = sizeof(vec_orig3) / sizeof(*vec_orig3);
+
+  uint16_t vec_result3[tam_vec3];
+
+  productoEscalar16(vec_orig3, vec_result3, tam_vec3, 3);
+
+  // Fin Ejercicio 3
+
+  // Ejercicio 4
+  uint16_t vec_orig4[] = {0xFF0, 9, 25, 37, 1 };
+  uint32_t tam_vec4 = sizeof(vec_orig4) / sizeof(*vec_orig4);
+
+  uint16_t vec_result4[tam_vec4];
+
+  productoEscalar12(vec_orig4, vec_result4, tam_vec4, 32);
+
+  // Fin Ejercicio 4
 
 
   /* USER CODE END 2 */
