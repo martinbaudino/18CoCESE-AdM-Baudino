@@ -141,28 +141,37 @@ void zeros (uint32_t * vector, uint32_t longitud){
 // Ejercicio 2
 void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longitud, uint32_t escalar){
 
-	for(int32_t i=0; i<longitud; i++){
-		vectorOut[i] = vectorIn[i] * escalar;
+	if(vectorIn != NULL && vectorOut != NULL){
+		for(int32_t i=0; i<longitud; i++){
+				vectorOut[i] = vectorIn[i] * escalar;
+			}
 	}
 }
 
 // Ejercicio 3
 void productoEscalar16 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar){
-	for(int32_t i=0; i<longitud; i++){
-		vectorOut[i] = vectorIn[i] * escalar;
+	if(vectorIn != NULL && vectorOut != NULL){
+		for(int32_t i=0; i<longitud; i++){
+			vectorOut[i] = vectorIn[i] * escalar;
+		}
 	}
 }
 
 // Ejercicio 4
-#define MAX_UINT12 0xFFF
+#define MAX_UINT12 0xFFF  // Mayor valor que entra en un número de 12 bits
+
 void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar){
-	uint16_t max_mult = MAX_UINT12 / escalar;
-	for(int32_t i=0; i<longitud; i++){
-		if( escalar != 0 && vectorIn[i] < max_mult){
-			vectorOut[i] = vectorIn[i] * escalar;
-		}
-		else {
-			vectorOut[i] = MAX_UINT12;
+	if(vectorIn != NULL && vectorOut != NULL){
+
+		uint16_t max_mult = MAX_UINT12 / escalar;  // Valor a partir del cual se produce desborde al multiplicar por "escalar"
+
+		for(int32_t i=0; i<longitud; i++){
+			if( escalar != 0 && vectorIn[i] < max_mult){
+				vectorOut[i] = vectorIn[i] * escalar;
+			}
+			else {
+				vectorOut[i] = MAX_UINT12;
+			}
 		}
 	}
 }
