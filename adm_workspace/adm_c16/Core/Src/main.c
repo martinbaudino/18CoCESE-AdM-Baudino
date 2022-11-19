@@ -154,7 +154,6 @@ void productoEscalar16 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t long
 }
 
 // Ejercicio 4
-<<<<<<< HEAD
 #define MAX_UINT12 0xFFF
 void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar){
 	uint16_t max_mult = MAX_UINT12 / escalar;
@@ -164,20 +163,9 @@ void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t long
 		}
 		else {
 			vectorOut[i] = MAX_UINT12;
-=======
-#define MAX_UINT16 0xFFFF
-void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar){
-	for(int32_t i=0; i<longitud; i++){
-		if( escalar != 0 && vectorIn[i] < MAX_UINT16 / escalar){
-			vectorOut[i] = vectorIn[i] * escalar;
-		}
-		else {
-			vectorOut[i] = MAX_UINT16;
->>>>>>> 2a2f9cf9571fefed11f3ee56587d8fd616ac75a2
 		}
 	}
 }
-
 
 /* USER CODE END 0 */
 
@@ -243,11 +231,8 @@ int main(void)
   // Fin Ejercicio 3
 
   // Ejercicio 4
-<<<<<<< HEAD
   uint16_t vec_orig4[] = {0xFF0, 9, 25, 37, 1 };
-=======
-  uint16_t vec_orig4[] = {0x0FFF, 9, 25, 37, 1 };
->>>>>>> 2a2f9cf9571fefed11f3ee56587d8fd616ac75a2
+
   uint32_t tam_vec4 = sizeof(vec_orig4) / sizeof(*vec_orig4);
 
   uint16_t vec_result4[tam_vec4];
