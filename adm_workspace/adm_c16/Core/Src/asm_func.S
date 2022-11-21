@@ -3,6 +3,7 @@
 .text
 
 @ Simbolos exportados
+.global asm_zeros
 .global asm_svc
 .global asm_sum
 
@@ -15,6 +16,24 @@
     asm_svc:
         svc 0
         bx lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@   void asm_zeros (uint32_t * vector, uint32_t longitud)
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria de inicio del vector
+@   r1: longitud
+.thumb_func
+    asm_zeros:
+    	mov r2, 0
+    	asm_zeros_bucle:
+    		str r2, [r0]
+    		add r0, 4
+    		subs r1, 1
+    		bne asm_zeros_bucle
+    	bx lr
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

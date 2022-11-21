@@ -166,6 +166,7 @@ void productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t long
 		uint16_t max_mult = MAX_UINT12 / escalar;  // Valor a partir del cual se produce desborde al multiplicar por "escalar"
 
 		for(int32_t i=0; i<longitud; i++){
+
 			if( escalar != 0 && vectorIn[i] < max_mult){
 				vectorOut[i] = vectorIn[i] * escalar;
 			}
@@ -249,6 +250,9 @@ int main(void)
   productoEscalar12(vec_orig4, vec_result4, tam_vec4, 32);
 
   // Fin Ejercicio 4
+
+  uint32_t vector[] = {35, 9, 7, 8};
+  asm_zeros(vector, 4);
 
 
   /* USER CODE END 2 */
