@@ -46,10 +46,18 @@ La principal ventja es evitar que que se reinicie el pipeline, con lo que se per
 
 9. Describa brevemente las excepciones más prioritarias (reset, NMI, Hardfault).
 
+Si bien todas las excepciones son procesadas por el NVIC, las tres excepciones más prioritarias son Reset, NMI y HardFault, tienen aglunas particularidades en común. Sus niveles de prioridad son fijos, a diferencia del resto de las fuentes de excepciones y, al ser excepciones del sistema, sus números de excepción también son fijos. Además, cada una tiene características especiales:
+
+    1. **Reset**: excepción número 1, con **prioridad -3** (la más alta). Cuando el procesador sale del estado de reinicio, el mananipulador de reset (reset handler) se ejecuta en modo **Thread**.
+
+    2. **NMI (Non-Maskable Interrupt)**: excepción número 2, con **prioridad -2**. Esta fuente de interrupción no puede ser desactivada y se suele utilizar para estados de emergencia gatillados por ejemplo por un temporizador guardián o un detector de caída de tensión (brownout).
+
+    3. **HardFault**: excepción número 3, con **prioridad -1**. Se dispara cuando se produce una falla de hardware y su manipulador correspondiente está desactivado o enmascarado. Se puede desactivar desde el registro FAULTMASK.
 
 
 10. Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
 
+La pila se utiliza para pasar datos a funciones o subrutinas, guardar variables locales, resguardar el contexto de ejecución cuando se dispara una interrupción y guardar valores de registros que se van a reutilizar temporalmente. En la arquitectura ARM Cortex se utilizan las instrucciones BL (Branch and Link) y BLX (Branch and Link with eXchange) para ejecutar el salto y al mismo tiempo guardar la dirección de retorno en el LR (Link Register). Al finalizar la función se puede retornar recuperando el LR a través de la instrucción BX (Branch and exchange). 
 
 
 11. Describa la secuencia de reset del microprocesador.
