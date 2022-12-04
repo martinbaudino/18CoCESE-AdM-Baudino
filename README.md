@@ -48,11 +48,11 @@ La principal ventja es evitar que que se reinicie el pipeline, con lo que se per
 
 Si bien todas las excepciones son procesadas por el NVIC, las tres excepciones más prioritarias son Reset, NMI y HardFault, tienen aglunas particularidades en común. Sus niveles de prioridad son fijos, a diferencia del resto de las fuentes de excepciones y, al ser excepciones del sistema, sus números de excepción también son fijos. Además, cada una tiene características especiales:
 
-    1. **Reset**: excepción número 1, con **prioridad -3** (la más alta). Cuando el procesador sale del estado de reinicio, el mananipulador de reset (reset handler) se ejecuta en modo **Thread**.
+   * **Reset**: excepción número 1, con **prioridad -3** (la más alta). Cuando el procesador sale del estado de reinicio, el mananipulador de reset (reset handler) se ejecuta en modo **Thread**.
 
-    2. **NMI (Non-Maskable Interrupt)**: excepción número 2, con **prioridad -2**. Esta fuente de interrupción no puede ser desactivada y se suele utilizar para estados de emergencia gatillados por ejemplo por un temporizador guardián o un detector de caída de tensión (brownout).
+   * **NMI (Non-Maskable Interrupt)**: excepción número 2, con **prioridad -2**. Esta fuente de interrupción no puede ser desactivada y se suele utilizar para estados de emergencia gatillados por ejemplo por un temporizador guardián o un detector de caída de tensión (brownout).
 
-    3. **HardFault**: excepción número 3, con **prioridad -1**. Se dispara cuando se produce una falla de hardware y su manipulador correspondiente está desactivado o enmascarado. Se puede desactivar desde el registro FAULTMASK.
+   * **HardFault**: excepción número 3, con **prioridad -1**. Se dispara cuando se produce una falla de hardware y su manipulador correspondiente está desactivado o enmascarado. Se puede desactivar desde el registro FAULTMASK.
 
 
 10. Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
@@ -62,11 +62,11 @@ La pila se utiliza para pasar datos a funciones o subrutinas, guardar variables 
 
 11. Describa la secuencia de reset del microprocesador.
 
-
+Al salir del estado de Reset el núcleo lee las primeras dos palabras al inicio del espacio de memoria en las direcciones 0x00000000 y 0x00000004. En la primera se encuentra la dirección de la pila de la aplicación principal, que el núcleo cargará en el MSP (Main Stack Pointer), y en la segunda se encuentra el vector de Reset, que contiene la dirección del manipulador de reset, y que el núcleo cargará en el Contador de Programa (PC), para comenzar la ejecución.
 
 12. ¿Qué entiende por “core peripherals”? ¿Qué diferencia existe entre estos y el resto de los periféricos?
 
-
+Son los periféricos que se encuentran en el núcleo, principalmente el NVIC y el SysTick, pero también el SCB y la MPU, y están mapeados en un espacio de direcciones específico de 4KB, llamado SCS (System Control Space).
 
 13. ¿Cómo se implementan las prioridades de las interrupciones? Dé un ejemplo
 
