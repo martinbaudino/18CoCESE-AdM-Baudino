@@ -110,18 +110,32 @@ Son los periféricos que se encuentran en el núcleo, principalmente el NVIC y e
 
 1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo
 
-
+Los sufijos son nmemónicos que se pueden agregar a la parte final de una instrucción para modificar su comportamiento. Se pueden utilizar para que las operaciónes actualicen el registro de estado "APSR" (sufijo "S"), para ejecución condicional (EQ; NE; CS; CC, MI, PL, VS, VC, GE, LT, GT, LE), y para especificar la precisión de punto flotante a utilizar. Un ejemplo es utilizar la instrucción "BLE etiqueta" para realizar un salto a una posición del programa si una comparación realizada en un paso previo resultó con estado "menor o igual".
 
 2. ¿Para qué se utiliza el sufijo ‘s’? Dé un ejemplo
 
+En el caso del sufijo "S" la instrucción actualizará las banderas de estado (State) del APSR. Luego hay un conjunto de sufijos para ejecución condicional, como "EQ" o "GE" para utilizan el APSR para decidir si se ejecuta una instrucción, por ejemplo "ADDEQ" realiza una suma si el operación anterior resultó con estado "igual".
 
 
 3. ¿Qué utilidad tiene la implementación de instrucciones de aritmética saturada? Dé un ejemplo con operaciones con datos de 8 bits.
 
-
+En las aplicaciones de Procesamiento Digital de Señales (DSP), las instrucciones de aritmética saturada previene la distorsión de los resultados de operaciones aritméticas cuando ocurre un overflow o underflow. Un ejemplo sucede cuando se desea amplificar una señal y la amplitur resultante excede el valor máximo o mínimo de salida. En esos casos, la operación de saturación fija el valor de salida al máximo o minimo del rango permitido, según corresponda.
 
 4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de las funciones? ¿Cómo se devuelve el resultado? ¿Qué registros deben guardarse en la pila antes de ser modificados?
 
+En el "ARM Architecture Procedure Call Standard" o AAPCS se detallan las definiciones de funcionamiento de la arquitectura para la Interfaz Binaria de Aplicaciónes (ABI). En su capítulo 6 se define que:
+
+   * Los registros **R0 a R3** se utilizan para **pasar valores** de argumentos a subrutinas y para **devlover resultados** desde funciones.
+   * Los registros **R4 a R8, R10 y R11** pueden ser utilizados para los valores de variables locales de una rutina.
+   * La utilización del registro **R9** depende de la plataforma y puede ser utilizado también para valores de variables locales.
+   * El registro **R12** o IP (Intra-Procedure-call scratch register) y puede ser utilizado sin considerar su contenido entre llamadas a subrutinas.
+   * El registr **R13** es el puntero a la pila SP (Stack Pointer), que puede ser la pila principal (MSP, Main Stack Pointer) o de un proceso (PSP, Process Stack Pointer).
+   * El registro **R14** es el registro de enlace LR (Link Register) y contiene la dirección a la que debe retornar el procesador en una subrutina, llamada a función y excepciones.
+   * El registro **R15** es el contador del programa PC (Program Counter) y contiene la dirección actual del programa.
+
+Además, también define que una subrutina debe preservar el contenido de los registros **R4 a R8, R10, r11 y SP**.
 
 
 5. ¿Qué es una instrucción SIMD? ¿En qué se aplican y que ventajas reporta su uso? Dé un ejemplo.
+
+Una instrucción SIMD procesa múltiples datos en una única operación (Single Instruction, Multiple Data). Para ello la Unidad Aritmética Lógica (ALU) puede subdividir un dato de 32 bits en 2 datos de 16 bits, o en 4 datos de 8 bits, y los interpreta como valores independientes, aún cuando sean números con signo. Además, estas instrucciones se pueden combinar con operaciones de aritmética saturada y de suma y acumulación simultánea (MAC; Multuply Accumulate), como por ejemplo la instrucción "SMUAD" que realiza el producto de dos pares valores con signo de 16 bits y suma los resultados ambos productos, todo en una sola instrucción que tiene como resultado un número de 32 bits y la actualización de la bandera "Q" si se produce saturación. Estas instrucciones se utilizan para realizar Procesamiento Digital de Señales (DSP) a partir de datos obtenidos de Conversores Analógicos a Digitales (ADCs) que suelen ser de 16 bits o menos, por ejemplo en señales de audio o en imágenes represantadas por píxeles donde los 24 están subdivididos en tres canales de 8 bits.
