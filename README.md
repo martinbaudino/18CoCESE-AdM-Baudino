@@ -64,25 +64,25 @@ La pila se utiliza para pasar datos a funciones o subrutinas, guardar variables 
 
 Al salir del estado de Reset el núcleo lee las primeras dos palabras al inicio del espacio de memoria en las direcciones 0x00000000 y 0x00000004. En la primera se encuentra la dirección de la pila de la aplicación principal, que el núcleo cargará en el MSP (Main Stack Pointer), y en la segunda se encuentra el vector de Reset, que contiene la dirección del manipulador de reset, y que el núcleo cargará en el Contador de Programa (PC), para comenzar la ejecución.
 
-12. ¿Qué entiende por “core peripherals”? ¿Qué diferencia existe entre estos y el resto de los periféricos?
+12. ¿Qué entiende por "core peripherals"? ¿Qué diferencia existe entre estos y el resto de los periféricos?
 
 Son los periféricos que se encuentran en el núcleo, principalmente el NVIC y el SysTick, pero también el SCB y la MPU, y están mapeados en un espacio de direcciones específico de 4KB, llamado SCS (System Control Space).
 
 13. ¿Cómo se implementan las prioridades de las interrupciones? Dé un ejemplo
 
-
+La complejidad del NVIC incrementa con la cantidad de niveles de prioridad. Esto afecta negativamente en el consumo de energía y la velocidad del diseño. Por ello, la arquitectura permite que los fabricantes de circuitos integrados especifiquen la cantidad de niveles de prioridad de acuerdo a sus necesidades. Los niveles de prioridad son especificados por registros de nivel de prioridad, que tienen un ancho de 3 a 8 bits, y para reducir la cantidad de niveles dipsonibles se quitan los bits menos significativos (LSB).
 
 14. ¿Qué es el CMSIS? ¿Qué función cumple? ¿Quién lo provee? ¿Qué ventajas aporta?
 
-
+La sigla CMSIS se puede traducir del inglés como Estándar de Interfaz de Aplicaciones en Microcontroladores Cortex y es una capa de abstracción para programación de los núcleos Cortex-M, junto con especificaciones para interfaces de depuración. Su objetivo es reducir los costos de creación de software y facilitar la interoperabilidad y reutilización de código fuente. Es desarrollado y mantenido por ARM de manera independiente a los fabricantes de silicio, que como ventajas publicita la posibilidad de integrar compenentes de software de múltiples proveedores y así reducir la curva de aprendizaje para los desarrolladores y el tiempo de desarrollo de nuevos dispositivos.
 
 15. Cuando ocurre una interrupción, asumiendo que está habilitada ¿Cómo opera el microprocesador para atender a la subrutina correspondiente? Explique con un ejemplo
 
-
+En los procesadores Cortex-M, cuando se produce una excepción que se encuentra habilitada, el procesador guarda en la pila el conjunto de registros R0-R3, R12, LR y PSR (stacking), formando la trama de la pila, y luego de ello ejecuta la Rutina de Servicio de Interrupción (ISR) a partir de la tabla de vectores de interrupción.
 
 17. ¿Cómo cambia la operación de stacking al utilizar la unidad de punto flotante?
 
-
+Cuando se utiliza la Unidad de Punto Flotante (FPU) los registros S0 a S15, y el FPSCR deben ser guardados en la pila antes de una llamada a función, si sus valores serán necesarios luego de esa llamada, mientras que la función llamada es responsable de que los registros S16 a S31 estén inalterados al retornar, ya sea guardándolos en la pila o evitando su modificación.
 
 18. Explique las características avanzadas de atención a interrupciones: tail chaining y late arrival.
 
