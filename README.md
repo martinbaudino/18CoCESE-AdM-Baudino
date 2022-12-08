@@ -86,15 +86,18 @@ Cuando se utiliza la Unidad de Punto Flotante (FPU) los registros S0 a S15, y el
 
 18. Explique las características avanzadas de atención a interrupciones: tail chaining y late arrival.
 
+El encadenamiento de/en cola (tail chaining) es el procesamiento de una excepción ni bien se termina de ejecutar otra excepción, con lo que se logra reducir la latencia de ejecución entre las interrupciones a solo seis (6) ciclos. Para reducir este tiempo de guardado y restauración de contextos entre interrupciones, el procesador **no** recupera de la pila los ocho (8) registros al salir de la rutina de excepción (ISR) ni guarda los ocho (registros) de entrada a la siguiente ISR, ya que el contexto de la primera ISR no tiene valores útiles.
+
+Por otro se denomina interrupción de llegada tardía (late arrival) a una interrupción que se adelanta a otra que ya se produjo, siendo la condición que la primera en producirse todavía no haya entrado en modo de ejecución, y que la que se produjo más tarde sea de mayor prioridad que la que se estaba por ejecutar.
 
 
 19. ¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos?
 
-
+El Systick es un contador descendente de 24 bits integrado a los procesadores Cortex-M, que se puede utilizar para generar interrupciones a intervalos regulares. Esta funcionalidad es indispensable para la ejecución de Sistemas Operativos (OS) embebidos que deben medir tiempos. Favorecen la portabilidad dentro de todos los microcontroladores de cualquier fabricante que utilice la arquitectura Cortex-M, ya que esta parte del código de los OS se puede portar sin hacer modificaciones. 
 
 20. ¿Qué funciones cumple la unidad de protección de memoria (MPU)?
 
-
+La MPU es un módulo de implementación opcional en los núcleos Cortex-M que monitorea las transacciones de memoria. Permite a las aplicaciones dividir el espacio de memoria en regiones y definir permisos de acceso a cada una de ellas que dependan del modo de ejecución (thread o handler). Cuando una regla es violada, produce una excepción de falla . También puede definir regiones de solo lectura. 
 
 21. ¿Cuántas regiones pueden configurarse como máximo? ¿Qué ocurre en caso de haber solapamientos de las regiones? ¿Qué ocurre con las zonas de memoria no cubiertas por las regiones definidas?
 
@@ -105,6 +108,8 @@ Cuando se utiliza la Unidad de Punto Flotante (FPU) los registros S0 a S15, y el
 
 
 23. ¿Para qué se suele utilizar la excepción SVC? Expliquelo dentro de un marco de un sistema operativo embebido.
+
+
 
 ### ISA
 
