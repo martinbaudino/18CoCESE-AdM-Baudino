@@ -101,14 +101,15 @@ La MPU es un módulo de implementación opcional en los núcleos Cortex-M que mo
 
 21. ¿Cuántas regiones pueden configurarse como máximo? ¿Qué ocurre en caso de haber solapamientos de las regiones? ¿Qué ocurre con las zonas de memoria no cubiertas por las regiones definidas?
 
-
+Pueden configurarse hasta 8 regiones de memoria, mas una región de background. Todas las regiones deben estar alineadas a un múltiplo de su tamaño. Cuando dos regiones de memoria se solapan, los atributos de acceso y los permisos corresponderán a los de la región con mayor número. Ej, si se solapan las regiones 2 y 3, ese conjunto de direcciones tendrá los atributos de la región 3. Cuando se intenta acceder a una dirección de memoria que no se encuentra en ninguna región, se gatilla la una excepción, que puede ser MemManage o HardFault. En esta excepción se decide si reiniciar el sistema o terminar la tarea que produjo la violación.
 
 22. ¿Para qué se suele utilizar la excepción PendSV? ¿Cómo se relaciona su uso con el resto de las excepciones? Dé un ejemplo
 
-
+La excepción PendSV (Pendable request for System Service) permite a los OSs tener a una excepción pendiente para que se realicen acciones luego de que otras tareas importantes se completen. En terminos prácticos se utiliza para realizar el cambio de contextos antes de cambiar de una tarea a otra. La cuando se produce la interrupción por SysTick, si el OS detecta que hay una IRQ activa, difiere el cambio de contexto a través de la excepción PendSV.
 
 23. ¿Para qué se suele utilizar la excepción SVC? Expliquelo dentro de un marco de un sistema operativo embebido.
 
+La excepción de Llamada al Supervisor (SVC, Supervisor Call) se genera a través de la ejecución de una instrucción de igual nombre (SVC). En un contexto de OS embebido, una tarea que se ejecuta en un modo no privilegiado, puede solicitar servicios del OS que se ejecuta en modo privilegiado.
 
 
 ### ISA
