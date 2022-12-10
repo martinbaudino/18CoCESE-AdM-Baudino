@@ -27,6 +27,9 @@
 @ Ejercicio 7 en Assembly
 .global asm_max
 
+@ Ejercicio 8 en Assembly
+.global asm_downsampleM
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
 @   void asm_svc (void)
@@ -303,6 +306,49 @@
     asm_max_salir:
     	pop 	{r4-r5}
     	bx 		lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 8  en Assembly - Prototipo en "C":
+@   void downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud,
+@							uint32_t N):
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vectorIn (int32_t)
+@   r1: dirección de memoria del inicio del vectorOut (int32_t)
+@	r2: uint32_t longitud de los vectores
+@	r3: uint32_t escalar para decimar vector de entrada
+@
+@ Registros utilizados:
+@	r4: registro auxiliar, valor de cada elemento de vectorIn
+@	r5: índice para decimar cada N elementos
+
+.thumb_func
+    asm_downsampleM:
+    	push 	{r4-r5}
+
+    	cmp 	r0, #0				@ vectorIn != NULL
+        beq 	asm_downsampleM_salir
+        cmp 	r1, #0				@ vectorOut != NULL
+        beq 	asm_downsampleM_salir
+
+        mov		r5, r3				@ R5 = N
+
+    asm_downsampleM_bucle:
+    	ldr		r4, [r0], #4
+
+		subs	r5, #1				@ R5--
+		ite		ne					@ Si R5 != 0
+		strne 	r4, [r1], #4		@ Guarda el valor
+		moveq	r5,r3				@ Si no, reinicia cuenta R5 = N
+
+    	subs 	r2, 1
+    	bne 	asm_downsampleM_bucle
+
+    asm_downsampleM_salir:
+    	pop 	{r4-r5}
+    	bx 		lr
+
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

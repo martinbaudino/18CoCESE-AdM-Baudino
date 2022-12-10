@@ -77,3 +77,15 @@ void asm_pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
  * @return
  */
 int32_t asm_max(int32_t * vectorIn, uint32_t longitud);
+
+
+/**
+ * @fn void downsampleM(int32_t*, int32_t*, uint32_t, uint32_t)
+ * @brief Ejercicio 8  en Assembly - Declaración de función
+ *
+ * @param vectorIn
+ * @param vectorOut
+ * @param longitud
+ * @param N
+ */
+void asm_downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N);

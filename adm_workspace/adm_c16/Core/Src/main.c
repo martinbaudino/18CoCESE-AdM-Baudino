@@ -134,7 +134,7 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
  * @param vectorOut
  * @param longitud
  */
-void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+void pack32to16(int32_t *vectorIn, int16_t *vectorOut, uint32_t longitud);
 
 /**
  * @fn int32_t max(int32_t*, uint32_t)
@@ -144,7 +144,19 @@ void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
  * @param longitud
  * @return
  */
-int32_t max (int32_t * vectorIn, uint32_t longitud);
+int32_t max(int32_t *vectorIn, uint32_t longitud);
+
+/**
+ * @fn void downsampleM(int32_t*, int32_t*, uint32_t, uint32_t)
+ * @brief Ejercicio 8 en C - Declaración de función
+ *
+ * @param vectorIn
+ * @param vectorOut
+ * @param longitud
+ * @param N
+ */
+void downsampleM(int32_t *vectorIn, int32_t *vectorOut, uint32_t longitud,
+		uint32_t N);
 
 /* USER CODE END PFP */
 
@@ -312,12 +324,12 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 		 *
 		 *  El proceso se detiene cuando el índice de la ventana llega al tamaño
 		 *  del vector (la ventana no está centrada)
-				 */
+		 */
 		for (uint32_t i = 0; i < longitudVectorIn; i++) {
 
 			acumulador += vectorIn[i];	// Agregar una nueva muestra
 
-			if (i >= tam_ventana) {						// A partir del tamaño de ventana
+			if (i >= tam_ventana) {			// A partir del tamaño de ventana
 				acumulador -= vectorIn[i - tam_ventana];// al avanzar resta la muestra que sobra
 			}
 
@@ -327,22 +339,40 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 }
 
 // Ejercicio 6 en C en C - Definición de función
-void pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
-	for(uint32_t i = 0; i < longitud; i++){
-		vectorOut[i] = (int16_t) (vectorIn[i] >> 16);
+void pack32to16(int32_t *vectorIn, int16_t *vectorOut, uint32_t longitud) {
+	if (vectorIn != NULL && vectorOut != NULL) {
+		for (uint32_t i = 0; i < longitud; i++) {
+			vectorOut[i] = (int16_t) (vectorIn[i] >> 16);
+		}
 	}
 }
 
-
 // Ejercicio 7 en C en C - Definición de función
-int32_t max(int32_t * vectorIn, uint32_t longitud){
+int32_t max(int32_t *vectorIn, uint32_t longitud) {
 	uint32_t max_idx = 0;
 
-	for(uint32_t i = 0; i <longitud; i++){
-		if(vectorIn[i] > vectorIn[max_idx])
-			max_idx = i;
+	if (vectorIn != NULL) {
+		for (uint32_t i = 0; i < longitud; i++) {
+			if (vectorIn[i] > vectorIn[max_idx])
+				max_idx = i;
+		}
 	}
 	return max_idx;
+}
+
+// Ejercicio 8 en C en C - Definición de función
+void downsampleM(int32_t *vectorIn, int32_t *vectorOut, uint32_t longitud,
+		uint32_t N) {
+	uint32_t j = 0;
+
+	if (vectorIn != NULL && vectorOut != NULL) {
+		for (uint32_t i = 0; i < longitud; i++) {
+			if (i % N != 0) {
+				vectorOut[j] = vectorIn[i];
+				j++;
+			}
+		}
+	}
 }
 
 /* USER CODE END 0 */
@@ -408,7 +438,8 @@ int main(void) {
 	 */
 	uint32_t ej2_c_vector32In[] = { 5, 9, 25, 37, 1 };
 
-	uint32_t tam_vec_ej2_c = sizeof(ej2_c_vector32In) / sizeof(*ej2_c_vector32In);
+	uint32_t tam_vec_ej2_c = sizeof(ej2_c_vector32In)
+			/ sizeof(*ej2_c_vector32In);
 
 	uint32_t ej2_c_vector32Out[tam_vec_ej2_c];
 
@@ -458,23 +489,34 @@ int main(void) {
 	/*------------ FIN Ejercicio 5 en C -----------*/
 
 	/*---------- INICIO Ejercicio 6 en C ----------*/
-	int32_t ej6_c_vector32In[VEC_SIZE_EJ5] = { -1, 500000000, -500000000,
-			65534, 65535, 65536, -65534, -65535, -65536, 36868, 36863, 36864, -36863, -36864 };
+	int32_t ej6_c_vector32In[VEC_SIZE_EJ5] = { -1, 500000000, -500000000, 65534,
+			65535, 65536, -65534, -65535, -65536, 36868, 36863, 36864, -36863,
+			-36864 };
 	int16_t ej6_c_vector16Out[VEC_SIZE_EJ5] = { 0 };
-
 
 	pack32to16(ej6_c_vector32In, ej6_c_vector16Out, VEC_SIZE_EJ5);
 
 	/*------------ FIN Ejercicio 6 en C -----------*/
 
 	/*---------- INICIO Ejercicio 7 en C ----------*/
-	int32_t ej7_c_vector32In[VEC_SIZE_EJ5] = { -1, -500000000,
-				65534, 65535, 65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864, -36863, -36864 };
+	int32_t ej7_c_vector32In[VEC_SIZE_EJ5] = { -1, -500000000, 65534, 65535,
+			65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864,
+			-36863, -36864 };
 	uint32_t max_indice = 0;
 
 	max_indice = max(ej7_c_vector32In, VEC_SIZE_EJ5);
 
 	/*------------ FIN Ejercicio 7 en C -----------*/
+
+	/*---------- INICIO Ejercicio 8 en C ----------*/
+	int32_t ej8_c_vector32In[VEC_SIZE_EJ5] = { -1, -500000000, 65534, 65535,
+			65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864,
+			-36863, -36864 };
+	int32_t ej8_c_vector32Out[VEC_SIZE_EJ5] = { 0 };
+
+	downsampleM(ej8_c_vector32In, ej8_c_vector32Out, VEC_SIZE_EJ5, 3);
+
+	/*------------ FIN Ejercicio 8 en C -----------*/
 
 	/** Aplicaciones para comprobar el correcto funcionamiento de
 	 *  las funciones desarrolladas
@@ -547,9 +589,9 @@ int main(void) {
 	/*------------ FIN Ejercicio 5 en Assembly -----------*/
 
 	/*---------- INICIO Ejercicio 6 en Assembly ----------*/
-	int32_t ej6_asm_vector32In[VEC_SIZE_EJ5] = { -1, 500000000, -500000000, 65534,
-			65535, 65536, -65534, -65535, -65536, 36868, 36863, 36864, -36863,
-			-36864 };
+	int32_t ej6_asm_vector32In[VEC_SIZE_EJ5] = { -1, 500000000, -500000000,
+			65534, 65535, 65536, -65534, -65535, -65536, 36868, 36863, 36864,
+			-36863, -36864 };
 	int16_t ej6_asm_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
 	asm_pack32to16(ej6_asm_vector32In, ej6_asm_vector16Out, VEC_SIZE_EJ5);
@@ -557,14 +599,28 @@ int main(void) {
 	/*------------ FIN Ejercicio 6 en Assembly -----------*/
 
 	/*---------- INICIO Ejercicio 7 en Assembly ----------*/
-	int32_t ej7_asm_vector32In[VEC_SIZE_EJ5] = { -1, -500000000,
-				65534, 65535, 65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864, -36863, -36864 };
+	int32_t ej7_asm_vector32In[VEC_SIZE_EJ5] = { -1, -500000000, 65534, 65535,
+			65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864,
+			-36863, -36864 };
 	uint32_t asm_max_indice = 0;
 
 	asm_max_indice = asm_max(ej7_asm_vector32In, VEC_SIZE_EJ5);
 
 	/*------------ FIN Ejercicio 7 en Assembly -----------*/
 
+	/*---------- INICIO Ejercicio 8 en Assembly ----------*/
+	/**
+	 * El resultado no es exactamente igual que en C, ya que la implementación con módulo
+	 * comienza borrando el primer elemento. Igualmente en ambos casos eliminan 1 de cada N
+	 */
+	int32_t ej8_asm_vector32In[VEC_SIZE_EJ5] = { -1, -500000000, 65534, 65535,
+			65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864,
+			-36863, -36864 };
+	int32_t ej8_asm_vector32Out[VEC_SIZE_EJ5] = { 0 };
+
+	asm_downsampleM(ej8_asm_vector32In, ej8_asm_vector32Out, VEC_SIZE_EJ5, 3);
+
+	/*------------ FIN Ejercicio 8 en Assembly -----------*/
 
 	/* USER CODE END 2 */
 
