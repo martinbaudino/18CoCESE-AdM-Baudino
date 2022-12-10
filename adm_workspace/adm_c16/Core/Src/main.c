@@ -126,6 +126,16 @@ void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut,
 void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 		uint32_t longitudVectorIn);
 
+/**
+ * @fn void pack32to16(int32_t*, int16_t*, uint32_t)
+ * @brief Ejercicio 6 en C - Declaración de función
+ *
+ * @param vectorIn
+ * @param vectorOut
+ * @param longitud
+ */
+void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -306,6 +316,12 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 	}
 }
 
+// Ejercicio 6 en C en C - Definición de función
+void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
+	for(uint32_t i = 0; i < longitud; i++){
+		vectorOut[i] = (int16_t)vectorIn[i];
+	}
+}
 
 /* USER CODE END 0 */
 
@@ -419,6 +435,16 @@ int main(void) {
 
 	/*------------ FIN Ejercicio 5 en C -----------*/
 
+	/*---------- INICIO Ejercicio 6 en C ----------*/
+	int32_t ej6_c_vector32In[VEC_SIZE_EJ5] = { -1, 500000000, -500000000,
+			65534, 65535, 65536, -65534, -65535, -65536, 36868, 36863, 36864, -36863, -36864 };
+	int16_t ej6_c_vector16Out[VEC_SIZE_EJ5] = { 0 };
+
+
+	pack32to16(ej6_c_vector32In, ej6_c_vector16Out, VEC_SIZE_EJ5);
+
+	/*------------ FIN Ejercicio 6 en C -----------*/
+
 	/** Aplicaciones para comprobar el correcto funcionamiento de
 	 *  las funciones desarrolladas
 	 *
@@ -487,9 +513,17 @@ int main(void) {
 
 	asm_filtroVentana10(ej5_asm_vector16In, ej5_asm_vector16Out, VEC_SIZE_EJ5);
 
-
-
 	/*------------ FIN Ejercicio 5 en Assembly -----------*/
+
+	/*---------- INICIO Ejercicio 6 en Assembly ----------*/
+	int32_t ej6_asm_vector32In[VEC_SIZE_EJ5] = { -1, 500000000, -500000000, 65534,
+			65535, 65536, -65534, -65535, -65536, 36868, 36863, 36864, -36863,
+			-36864 };
+	int16_t ej6_asm_vector16Out[VEC_SIZE_EJ5] = { 0 };
+
+	pack32to16(ej6_asm_vector32In, ej6_asm_vector16Out, VEC_SIZE_EJ5);
+
+	/*------------ FIN Ejercicio 6 en Assembly -----------*/
 
 	/* USER CODE END 2 */
 

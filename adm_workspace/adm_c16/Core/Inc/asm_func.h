@@ -57,3 +57,15 @@ void asm_productoEscalar12 (uint16_t * vectorIn, uint16_t * vectorOut, uint32_t 
  * @param longitudVectorIn
  */
 void asm_filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitudVectorIn);
+
+/**
+ * @fn void pack32to16(int32_t*, int16_t*, uint32_t)
+ * @brief Ejercicio 6  en Assembly - Declaración de función
+ *
+ * @param vectorIn
+ * @param vectorOut
+ * @param longitud
+ */
+void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+
+

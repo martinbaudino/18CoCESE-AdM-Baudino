@@ -21,6 +21,9 @@
 @ Ejercicio 5 en Assembly
 .global asm_filtroVentana10
 
+@ Ejercicio 6 en Assembly
+.global asm_pack32to16
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
 @   void asm_svc (void)
@@ -44,16 +47,16 @@
 
 .thumb_func
     asm_zeros:
-    	mov r2, 0			@ Valor 0 para sobrescribir el vector
+    	mov 	r2, 0			@ Valor 0 para sobrescribir el vector
 
     asm_zeros_bucle:
-    	str r2, [r0]		@ Guarda R2 (0) en la dirección que indica R0
-    	add r0, 4			@ Desplaza la dirección de R0 de a 4 bytes (32bits)
-    	subs r1, 1			@ Le resta a uno a R1, cantidad de items que faltan
-    	bne asm_zeros_bucle	@ procesar. Mientras la resta no sea 0, continúa
-    						@ iterando en el bucle
+    	str 	r2, [r0]		@ Guarda R2 (0) en la dirección que indica R0
+    	add 	r0, 4			@ Desplaza la dirección de R0 de a 4 bytes (32bits)
+    	subs 	r1, 1			@ Le resta a uno a R1, cantidad de items que faltan
+    	bne 	asm_zeros_bucle	@ procesar. Mientras la resta no sea 0, continúa
+    							@ iterando en el bucle
     asm_zeros_salir:
-    	bx lr
+    	bx 		lr
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -72,22 +75,22 @@
 
 .thumb_func
     asm_productoEscalar32:
-    	push {r4}		@ Guarda R4 en la pila, si se pone el randgo es {r4-r6}
+    	push 	{r4}		@ Guarda R4 en la pila, si se pone el randgo es {r4-r6}
 
     asm_productoEscalar32_bucle:
-    	ldr	r4, [r0], #4	@ Carga en R4 el valor al que apunta R0, e incrementa
+    	ldr		r4, [r0], #4	@ Carga en R4 el valor al que apunta R0, e incrementa
     						@ R0 en 4 bytes (32 bits) para ir al próx. elemento
 
-    	mul r4, r3			@ Realiza la multiplicación, resultado en R4
+    	mul 	r4, r3			@ Realiza la multiplicación, resultado en R4
 
-    	str r4, [r1], #4	@ Guarda el resultado en la dirección a la que apunto
+    	str 	r4, [r1], #4	@ Guarda el resultado en la dirección a la que apunto
     						@ R1, y lo incrementa en 4 bytes para ir al próx. elem.
-    	subs r2, 1
-    	bne asm_productoEscalar32_bucle
+    	subs 	r2, 1
+    	bne 	asm_productoEscalar32_bucle
 
     asm_productoEscalar32_salir:
-    	pop {r4}		@ Recupera r4 antes de volver a la aplicación
-    	bx lr
+    	pop 	{r4}		@ Recupera r4 antes de volver a la aplicación
+    	bx 		lr
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -106,22 +109,22 @@
 
 .thumb_func
     asm_productoEscalar16:
-    	push {r4}
+    	push 	{r4}
 
     asm_productoEscalar16_bucle:
-    	ldrh r4, [r0], #2	@ Carga en R4 el valor al que apunta R0, e incrementa
-    						@ R0 en 2 bytes (16 bits) para ir al próx. elemento
+    	ldrh 	r4, [r0], #2	@ Carga en R4 el valor al que apunta R0, e incrementa
+    							@ R0 en 2 bytes (16 bits) para ir al próx. elemento
 
-    	mul r4, r3
-    	strh r4, [r1], #2	@ Guarda el resultado en la dirección a la que apunto
-    						@ R1, y lo incrementa en 2 bytes para ir al próx. elem.
+    	mul 	r4, r3
+    	strh 	r4, [r1], #2	@ Guarda el resultado en la dirección a la que apunto
+    							@ R1, y lo incrementa en 2 bytes para ir al próx. elem.
 
-    	subs r2, 1
-    	bne asm_productoEscalar16_bucle
+    	subs 	r2, 1
+    	bne 	asm_productoEscalar16_bucle
 
     asm_productoEscalar16_salir:
-    	pop {r4}
-    	bx lr
+    	pop		{r4}
+    	bx 		lr
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -140,11 +143,11 @@
 
 .thumb_func
     asm_productoEscalar12:
-    	push {r4}
+    	push 	{r4}
 
-    	mrs r4, APSR			@ Carga APSR a registro de propósito general
-    	bfc r4, 27, 1			@ Modifica flag Q
-    	msr APSR_nzcvq, r4		@ Guarda resultado de vuelta en APSR
+    	mrs 	r4, APSR			@ Carga APSR a registro de propósito general
+    	bfc 	r4, 27, 1			@ Modifica flag Q
+    	msr 	APSR_nzcvq, r4		@ Guarda resultado de vuelta en APSR
 
     asm_productoEscalar12_bucle:
     	ldrh	r4, [r0], #2
@@ -157,8 +160,8 @@
     	bne 	asm_productoEscalar12_bucle
 
     asm_productoEscalar12_salir:
-    	pop {r4}
-    	bx lr
+    	pop 	{r4}
+    	bx 		lr
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -211,11 +214,49 @@
     	bne 	asm_filtroVentana10_bucle
 
     asm_filtroVentana10_salir:
-    	pop {r4-r6}
-    	bx lr
+    	pop 	{r4-r6}
+    	bx 		lr
 
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 6 en Assembly - Prototipo en "C":
+@   void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vectorIn (uint32_t)
+@   r1: dirección de memoria del inicio del vectorOut (uint16_t)
+@	r2: longitud de los vectores (uint32_t)
+@
+@ Registros utilizados:
+@	r3: acumulador de los valores a promediar
+@   r4: valor de cada elemento de vectorIn
 
+.thumb_func
+    asm_pack32to16:
+    	push 	{r4}
+
+		cmp 	r0, #0				@ vectorIn != NULL
+        beq 	asm_pack32to16_salir
+        cmp 	r1, #0				@ vectorOut != NULL
+        beq 	asm_pack32to16_salir
+
+    asm_pack32to16_bucle:
+    	ldr		r4, [r0], #4	@ Carga elementos de 32 bits
+
+    	ssat	r4, #16, r4		@ Satura con signo en 16 bits
+
+    	@asr	r4, r4, #16		@ Se consigue el mismo resultado realizando
+    							@ desplazamiento aritmético a la derecha, para
+    							@ mantener el signo
+
+    	strh	r4, [r1]		@ Guarda elementos de 16 bits
+
+    	subs 	r2, 1
+    	bne 	asm_pack32to16_bucle
+
+    asm_pack32to16_salir:
+    	pop 	{r4}
+    	bx 		lr
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
