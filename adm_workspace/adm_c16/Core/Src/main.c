@@ -167,6 +167,16 @@ void downsampleM(int32_t *vectorIn, int32_t *vectorOut, uint32_t longitud,
  */
 void invertir(uint16_t *vector, uint32_t longitud);
 
+/**
+ * @fn void eco(int16_t*, int16_t*, uint32_t)
+ * @brief Ejercicio 10 en C - Declaración de función
+ *
+ * @param vectorIn
+ * @param vectorOut
+ * @param longitud
+ */
+void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -403,6 +413,28 @@ void invertir(uint16_t *vector, uint32_t longitud) {
 	}
 }
 
+// Ejercicio 10 en C en C - Definición de función
+void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud){
+	/**
+	 * Las muestras de audio fueron tomadas a 44.100 muestras/s
+	 * El eco comienza a escucharse a partir de los 20ms, es decir
+	 * luego de reproducirse 882 muestras. Es decir:
+	 *
+	 * v_out[i] = vin[i]  para i < 882
+	 *
+	 * vout[i] = vin[i] + 1/2 * vin[i-882] para 882 <= i <4096
+	 *
+		 */
+	if (vectorIn != NULL && vectorOut != NULL) {
+		for(uint32_t i=0; i<882; i++){
+			vectorOut[i] = vectorIn[i];
+		}
+		for(uint32_t i = 882; i < longitud; i++){
+			vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
+		}
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -556,6 +588,23 @@ int main(void) {
 	/*------------ FIN Ejercicio 9 en C -----------*/
 
 
+	/*---------- INICIO Ejercicio 10 en C ----------*/
+#define VEC_SIZE_EJ10 4096U
+
+	int16_t ej10_c_vector16In[VEC_SIZE_EJ10] = { 0 };
+	int16_t ej10_c_vector16Out[VEC_SIZE_EJ10] = { 0 };
+
+	/**
+	 * Vector inicializado con una rampa suave
+		 */
+	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
+		ej10_c_vector16In[i] = i;
+	}
+
+	eco(ej10_c_vector16In, ej10_c_vector16Out, VEC_SIZE_EJ10);
+
+
+	/*------------ FIN Ejercicio 10 en C -----------*/
 
 	/** Aplicaciones para comprobar el correcto funcionamiento de
 	 *  las funciones desarrolladas
@@ -670,6 +719,21 @@ int main(void) {
 
 	/*------------ FIN Ejercicio 9 en Assembly -----------*/
 
+	/*---------- INICIO Ejercicio 10 en C ----------*/
+	int16_t ej10_asm_vector16In[VEC_SIZE_EJ10] = { 0 };
+	int16_t ej10_asm_vector16Out[VEC_SIZE_EJ10] = { 0 };
+
+	/**
+	 * Vector inicializado con una rampa suave
+		 */
+	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
+		ej10_asm_vector16In[i] = i;
+	}
+
+	asm_eco(ej10_asm_vector16In, ej10_asm_vector16Out, VEC_SIZE_EJ10);
+
+
+	/*------------ FIN Ejercicio 10 en C -----------*/
 
 	/* USER CODE END 2 */
 

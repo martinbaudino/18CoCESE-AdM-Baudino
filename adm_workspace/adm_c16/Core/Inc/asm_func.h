@@ -98,3 +98,13 @@ void asm_downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud
  * @param longitud
  */
 void asm_invertir(uint16_t *vector, uint32_t longitud);
+
+/**
+ * @fn void asm_eco(int16_t*, int16_t*, uint32_t)
+ * @brief Ejercicio 10  en Assembly - Declaración de función
+ *
+ * @param vectorIn
+ * @param vectorOut
+ * @param longitud
+ */
+void asm_eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud);

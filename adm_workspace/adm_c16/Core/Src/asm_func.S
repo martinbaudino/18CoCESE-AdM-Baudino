@@ -33,6 +33,9 @@
 @ Ejercicio 9 en Assembly
 .global asm_invertir
 
+@ Ejercicio 10 en Assembly
+.global asm_eco
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
 @   void asm_svc (void)
@@ -394,6 +397,54 @@
 
     asm_invertir_salir:
     	pop 	{r4-r5}
+    	bx 		lr
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 10 en Assembly - Prototipo en "C":
+@   void asm_eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vectorIn (uint32_t)
+@   r1: dirección de memoria del inicio del vectorOut (uint16_t)
+@	r2: longitud de los vectores (uint32_t)
+@
+@ Registros utilizados:
+@	r3: índice para recorrer los vectores
+@   r4: valor de cada elemento de vectorIn
+
+.thumb_func
+    asm_eco:
+    	push 	{r4-r6}
+
+		cmp 	r0, #0				@ vectorIn != NULL
+        beq 	asm_eco_salir
+        cmp 	r1, #0				@ vectorOut != NULL
+        beq 	asm_eco_salir
+
+		movw	r3, #881			@ Equivalente a uint32_t i=0
+    asm_eco_bucle1:
+    	ldrh	r4, [r0], #2		@ vectorIn[i]
+    	strh	r4, [r1], #2		@ vectorOut[i] = vectorIn[i];
+
+    	subs 	r3, 1				@ i++
+    	bne 	asm_eco_bucle1		@ @ i<882
+
+    	sub		r2, #881			@ Equivalente a uint32_t i = 882
+    asm_eco_bucle2:
+    	ldrh	r4, [r0], #2		@ vectorIn[i]
+    	ldr		r3, =-1762			@
+    	ldrh	r5, [r0, r3]		@ vector[i-882]
+    	movw	r3, #2				@ 2
+    	sdiv	r5, r5, r3			@ (vectorIn[i-882] / 2)
+    	add		r4, r4, r5			@ vectorIn[i] + (vectorIn[i-882] / 2)
+
+    	strh	r4, [r1], #2		@ vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
+
+    	subs 	r2, 1
+    	bne 	asm_eco_bucle2
+
+    asm_eco_salir:
+    	pop 	{r4-r6}
     	bx 		lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
