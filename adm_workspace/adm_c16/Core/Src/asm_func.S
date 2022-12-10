@@ -24,6 +24,9 @@
 @ Ejercicio 6 en Assembly
 .global asm_pack32to16
 
+@ Ejercicio 7 en Assembly
+.global asm_max
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
 @   void asm_svc (void)
@@ -243,19 +246,62 @@
     asm_pack32to16_bucle:
     	ldr		r4, [r0], #4	@ Carga elementos de 32 bits
 
-    	ssat	r4, #16, r4		@ Satura con signo en 16 bits
-
-    	@asr	r4, r4, #16		@ Se consigue el mismo resultado realizando
-    							@ desplazamiento aritmético a la derecha, para
+    	asr	r4, r4, #16			@ Desplazamiento aritmético a la derecha, para
     							@ mantener el signo
 
-    	strh	r4, [r1]		@ Guarda elementos de 16 bits
+    	strh	r4, [r1], #2	@ Guarda elementos de 16 bits
 
     	subs 	r2, 1
     	bne 	asm_pack32to16_bucle
 
     asm_pack32to16_salir:
     	pop 	{r4}
+    	bx 		lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 7 en Assembly - Prototipo en "C":
+@   int32_t asm_max(int32_t * vectorIn, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vectorIn (int32_t)
+@	r1: longitud de los vectores (uint32_t)
+@
+@ Registros utilizados:
+@	r2: índice del máximo número
+@	r3: valor del máximo número
+@   r4: valor de cada elemento de vectorIn
+@	r5: índice de cada elemento de vectorIn
+
+.thumb_func
+    asm_max:
+    	push 	{r4-r5}
+
+    	movw	r2, #0			@ uint32_t max_idx = 0;
+    	movw	r5, #0			@ uint32_t i = 0
+
+		cmp 	r0, #0			@ vectorIn != NULL
+        beq 	asm_max_salir
+
+        ldr		r3, [r0]		@ vectorIn[max_idx] con max_idx=0
+
+    asm_max_bucle:
+    	ldr		r4, [r0], #4	@ Carga elementos de 32 bits
+
+    	cmp		r4, r3			@ if(vectorIn[i] > vectorIn[max_idx])
+    	itt		ge
+    	movge	r3, r4			@ Actualiza valor al máximo
+    	movge	r2, r5			@ Actualiza el índice al del valor máximo
+
+    	add		r5, #1			@ i++
+
+    	subs 	r1, 1			@ Equivaldría a i <longitud
+    	bne 	asm_max_bucle
+
+    	mov 	r0, r2			@ Índice del mayor elemento para retornar
+
+    asm_max_salir:
+    	pop 	{r4-r5}
     	bx 		lr
 
 

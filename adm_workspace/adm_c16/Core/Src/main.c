@@ -136,6 +136,16 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
  */
 void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
 
+/**
+ * @fn int32_t max(int32_t*, uint32_t)
+ * @brief Ejercicio 7 en C - Declaración de función
+ *
+ * @param vectorIn
+ * @param longitud
+ * @return
+ */
+int32_t max (int32_t * vectorIn, uint32_t longitud);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -317,10 +327,22 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 }
 
 // Ejercicio 6 en C en C - Definición de función
-void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
+void pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
 	for(uint32_t i = 0; i < longitud; i++){
-		vectorOut[i] = (int16_t)vectorIn[i];
+		vectorOut[i] = (int16_t) (vectorIn[i] >> 16);
 	}
+}
+
+
+// Ejercicio 7 en C en C - Definición de función
+int32_t max(int32_t * vectorIn, uint32_t longitud){
+	uint32_t max_idx = 0;
+
+	for(uint32_t i = 0; i <longitud; i++){
+		if(vectorIn[i] > vectorIn[max_idx])
+			max_idx = i;
+	}
+	return max_idx;
 }
 
 /* USER CODE END 0 */
@@ -445,6 +467,15 @@ int main(void) {
 
 	/*------------ FIN Ejercicio 6 en C -----------*/
 
+	/*---------- INICIO Ejercicio 7 en C ----------*/
+	int32_t ej7_c_vector32In[VEC_SIZE_EJ5] = { -1, -500000000,
+				65534, 65535, 65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864, -36863, -36864 };
+	uint32_t max_indice = 0;
+
+	max_indice = max(ej7_c_vector32In, VEC_SIZE_EJ5);
+
+	/*------------ FIN Ejercicio 7 en C -----------*/
+
 	/** Aplicaciones para comprobar el correcto funcionamiento de
 	 *  las funciones desarrolladas
 	 *
@@ -521,9 +552,19 @@ int main(void) {
 			-36864 };
 	int16_t ej6_asm_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
-	pack32to16(ej6_asm_vector32In, ej6_asm_vector16Out, VEC_SIZE_EJ5);
+	asm_pack32to16(ej6_asm_vector32In, ej6_asm_vector16Out, VEC_SIZE_EJ5);
 
 	/*------------ FIN Ejercicio 6 en Assembly -----------*/
+
+	/*---------- INICIO Ejercicio 7 en Assembly ----------*/
+	int32_t ej7_asm_vector32In[VEC_SIZE_EJ5] = { -1, -500000000,
+				65534, 65535, 65536, -65534, 500000000, -65535, -65536, 36868, 36863, 36864, -36863, -36864 };
+	uint32_t asm_max_indice = 0;
+
+	asm_max_indice = asm_max(ej7_asm_vector32In, VEC_SIZE_EJ5);
+
+	/*------------ FIN Ejercicio 7 en Assembly -----------*/
+
 
 	/* USER CODE END 2 */
 
