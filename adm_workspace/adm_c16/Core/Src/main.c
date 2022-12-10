@@ -158,6 +158,15 @@ int32_t max(int32_t *vectorIn, uint32_t longitud);
 void downsampleM(int32_t *vectorIn, int32_t *vectorOut, uint32_t longitud,
 		uint32_t N);
 
+/**
+ * @fn void invertir(uint16_t*, uint32_t)
+ * @brief Ejercicio 9 en C - Declaración de función
+ *
+ * @param vector
+ * @param longitud
+ */
+void invertir(uint16_t *vector, uint32_t longitud);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -297,7 +306,7 @@ void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut,
 	}
 }
 
-// Ejercicio 5 en C en C - Definición de función
+// Ejercicio 5 en C - Definición de función
 void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 		uint32_t longitudVectorIn) {
 
@@ -338,7 +347,7 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 	}
 }
 
-// Ejercicio 6 en C en C - Definición de función
+// Ejercicio 6 en C - Definición de función
 void pack32to16(int32_t *vectorIn, int16_t *vectorOut, uint32_t longitud) {
 	if (vectorIn != NULL && vectorOut != NULL) {
 		for (uint32_t i = 0; i < longitud; i++) {
@@ -347,7 +356,7 @@ void pack32to16(int32_t *vectorIn, int16_t *vectorOut, uint32_t longitud) {
 	}
 }
 
-// Ejercicio 7 en C en C - Definición de función
+// Ejercicio 7 en C - Definición de función
 int32_t max(int32_t *vectorIn, uint32_t longitud) {
 	uint32_t max_idx = 0;
 
@@ -360,7 +369,7 @@ int32_t max(int32_t *vectorIn, uint32_t longitud) {
 	return max_idx;
 }
 
-// Ejercicio 8 en C en C - Definición de función
+// Ejercicio 8 en C - Definición de función
 void downsampleM(int32_t *vectorIn, int32_t *vectorOut, uint32_t longitud,
 		uint32_t N) {
 	uint32_t j = 0;
@@ -371,6 +380,25 @@ void downsampleM(int32_t *vectorIn, int32_t *vectorOut, uint32_t longitud,
 				vectorOut[j] = vectorIn[i];
 				j++;
 			}
+		}
+	}
+}
+
+// Ejercicio 9 en C en C - Definición de función
+void invertir(uint16_t *vector, uint32_t longitud) {
+	uint16_t auxiliar = 0;
+
+	/** Revierte los elementos del vector recorriéndolo linealmente y
+	 *  utilizando una variable auxiliar
+	 */
+	if (vector != NULL) {
+		for (uint32_t elem_inicial = 0, elem_final = longitud - 1;
+				elem_inicial < elem_final; elem_inicial++, elem_final--) {
+
+			auxiliar = vector[elem_inicial];
+			vector[elem_inicial] = vector[elem_final];
+			vector[elem_final] = auxiliar;
+
 		}
 	}
 }
@@ -518,6 +546,17 @@ int main(void) {
 
 	/*------------ FIN Ejercicio 8 en C -----------*/
 
+	/*---------- INICIO Ejercicio 9 en C ----------*/
+	uint16_t ej9_c_vector16In[VEC_SIZE_EJ5] = { 1, 2, 3, 4,
+			5, 6, 7, 8, 9, 10, 11, 12,
+			13, 14 };
+
+	invertir(ej9_c_vector16In, VEC_SIZE_EJ5);
+
+	/*------------ FIN Ejercicio 9 en C -----------*/
+
+
+
 	/** Aplicaciones para comprobar el correcto funcionamiento de
 	 *  las funciones desarrolladas
 	 *
@@ -621,6 +660,16 @@ int main(void) {
 	asm_downsampleM(ej8_asm_vector32In, ej8_asm_vector32Out, VEC_SIZE_EJ5, 3);
 
 	/*------------ FIN Ejercicio 8 en Assembly -----------*/
+
+	/*---------- INICIO Ejercicio 9 en Assembly ----------*/
+	uint16_t ej9_asm_vector16In[VEC_SIZE_EJ5] = { 1, 2, 3, 4,
+			5, 6, 7, 8, 9, 10, 11, 12,
+			13, 14 };
+
+	asm_invertir(ej9_asm_vector16In, VEC_SIZE_EJ5);
+
+	/*------------ FIN Ejercicio 9 en Assembly -----------*/
+
 
 	/* USER CODE END 2 */
 

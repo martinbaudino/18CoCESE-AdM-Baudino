@@ -30,6 +30,9 @@
 @ Ejercicio 8 en Assembly
 .global asm_downsampleM
 
+@ Ejercicio 9 en Assembly
+.global asm_invertir
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
 @   void asm_svc (void)
@@ -268,7 +271,7 @@
 @
 @ Parametros recibidos:
 @   r0: dirección de memoria del inicio del vectorIn (int32_t)
-@	r1: longitud de los vectores (uint32_t)
+@	r1: longitud del vector (uint32_t)
 @
 @ Registros utilizados:
 @	r2: índice del máximo número
@@ -350,6 +353,48 @@
     	bx 		lr
 
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 9 en Assembly - Prototipo en "C":
+@   void asm_invertir(uint16_t *vector, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vector (int16_t)
+@	r1: longitud del vector (uint32_t)
+@
+@ Registros utilizados:
+@	r2: índice desde el inicio del vector
+@	r3: índice desde el fin del vector
+@   r4: auxiliar para elementos del inicio
+@	r5: auxiliar para elementos del final
+
+.thumb_func
+    asm_invertir:
+    	push 	{r4-r5}
+
+    	movw	r2, #0			@ uint32_t elem_inicial = 0
+    	sub 	r1, #1			@ longitud - 1
+    	mov		r3, r1			@ elem_final = longitud - 1
+
+		cmp 	r0, #0			@ vectorIn != NULL
+        beq 	asm_invertir_salir
+
+    asm_invertir_bucle:
+    	ldrh	r4, [r0, r2, lsl #1]	@ vector[elem_inicial]
+    	ldrh	r5, [r0, r3, lsl #1]	@ vector[elem_final]
+										@ Los shift se necesitan para moverse de
+										@ a 2 bytes
+		strh	r5, [r0, r2, lsl #1]	@ vector[elem_inicial] = vector[elem_final]
+		strh	r4, [r0, r3, lsl #1]	@ vector[elem_final] = vector[elem_inicial]
+
+		add		r2, #1			@ elem_inicial++
+		sub		r3, #1			@ elem_final--
+
+		cmp 	r2, r3			@ elem_inicial < elem_final
+		blt		asm_invertir_bucle
+
+    asm_invertir_salir:
+    	pop 	{r4-r5}
+    	bx 		lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":

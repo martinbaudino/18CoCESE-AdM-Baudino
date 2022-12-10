@@ -89,3 +89,12 @@ int32_t asm_max(int32_t * vectorIn, uint32_t longitud);
  * @param N
  */
 void asm_downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N);
+
+/**
+ * @fn void invertir(uint16_t*, uint32_t)
+ * @brief Ejercicio 9  en Assembly - Declaración de función
+ *
+ * @param vector
+ * @param longitud
+ */
+void asm_invertir(uint16_t *vector, uint32_t longitud);
