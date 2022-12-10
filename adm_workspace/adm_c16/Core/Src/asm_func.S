@@ -19,7 +19,7 @@
 .global asm_productoEscalar12
 
 @ Ejercicio 5 en Assembly
-
+.global asm_filtroVentana10
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -38,17 +38,21 @@
 @ Parámetros recibidos:
 @   r0: dirección de memoria de inicio del vector
 @   r1: longitud
+@
 @ Registros utilizados:
 @	r2: registro auxiliar
 
 .thumb_func
     asm_zeros:
     	mov r2, 0			@ Valor 0 para sobrescribir el vector
-    	asm_zeros_bucle:
-    		str r2, [r0]	@ Guarda R2 (0) en la dirección que indica R0
-    		add r0, 4		@ Desplaza la dirección de R0 de a 4 bytes (32bits)
-    		subs r1, 1		@
-    		bne asm_zeros_bucle
+
+    asm_zeros_bucle:
+    	str r2, [r0]		@ Guarda R2 (0) en la dirección que indica R0
+    	add r0, 4			@ Desplaza la dirección de R0 de a 4 bytes (32bits)
+    	subs r1, 1			@ Le resta a uno a R1, cantidad de items que faltan
+    	bne asm_zeros_bucle	@ procesar. Mientras la resta no sea 0, continúa
+    						@ iterando en el bucle
+    asm_zeros_salir:
     	bx lr
 
 
@@ -62,18 +66,26 @@
 @   r1: dirección de memoria del inicio del vectorOut (uint32_t)
 @	r2: uint32_t longitud de los vectores
 @	r3: uint32_t escalar para multiplicar con elementos de vectorIn
+@
 @ Registros utilizados:
-@	r4: índice
+@	r4: registro auxiliar, valor de cada elemento de vectorIn
 
 .thumb_func
     asm_productoEscalar32:
     	push {r4}		@ Guarda R4 en la pila, si se pone el randgo es {r4-r6}
-    	mul32_bucle:
-    		ldr	r4, [r0], #4
-    		mul r4, r3
-    		str r4, [r1], #4
-    		subs r2, 1
-    		bne mul32_bucle
+
+    asm_productoEscalar32_bucle:
+    	ldr	r4, [r0], #4	@ Carga en R4 el valor al que apunta R0, e incrementa
+    						@ R0 en 4 bytes (32 bits) para ir al próx. elemento
+
+    	mul r4, r3			@ Realiza la multiplicación, resultado en R4
+
+    	str r4, [r1], #4	@ Guarda el resultado en la dirección a la que apunto
+    						@ R1, y lo incrementa en 4 bytes para ir al próx. elem.
+    	subs r2, 1
+    	bne asm_productoEscalar32_bucle
+
+    asm_productoEscalar32_salir:
     	pop {r4}		@ Recupera r4 antes de volver a la aplicación
     	bx lr
 
@@ -88,19 +100,27 @@
 @   r1: dirección de memoria del inicio del vectorOut (uint16_t)
 @	r2: uint32_t longitud de los vectores
 @	r3: uint16_t escalar para multiplicar con elementos de vectorIn
+@
 @ Registros utilizados:
-@	r4: índice
+@	r4: registro auxiliar, valor de cada elemento de vectorIn
 
 .thumb_func
     asm_productoEscalar16:
-    	push {r4}		@ Guarda R4 en la pila, si se pone el randgo es {r4-r6}
-    	mul16_bucle:
-    		ldrh	r4, [r0], #2
-    		mul r4, r3
-    		strh r4, [r1], #2
-    		subs r2, 1
-    		bne mul16_bucle
-    	pop {r4}		@ Recupera r4 antes de volver a la aplicación
+    	push {r4}
+
+    asm_productoEscalar16_bucle:
+    	ldrh r4, [r0], #2	@ Carga en R4 el valor al que apunta R0, e incrementa
+    						@ R0 en 2 bytes (16 bits) para ir al próx. elemento
+
+    	mul r4, r3
+    	strh r4, [r1], #2	@ Guarda el resultado en la dirección a la que apunto
+    						@ R1, y lo incrementa en 2 bytes para ir al próx. elem.
+
+    	subs r2, 1
+    	bne asm_productoEscalar16_bucle
+
+    asm_productoEscalar16_salir:
+    	pop {r4}
     	bx lr
 
 
@@ -114,26 +134,88 @@
 @   r1: dirección de memoria del inicio del vectorOut (uint16_t)
 @	r2: longitud de los vectores (uint32_t)
 @	r3: escalar para multiplicar con elementos de vectorIn (uint16_t)
+@
 @ Registros utilizados:
-@	r4: índice
+@	r4: registro auxiliar, valor de cada elemento de vectorIn
 
 .thumb_func
     asm_productoEscalar12:
-    	push {r4}		@ Guarda R4 en la pila, si se pone el randgo es {r4-r6}
+    	push {r4}
 
-    	mrs r4, APSR		@ Load APSR a registro de propósito general
-    	bfc r4, 27, 1		@ Modify flag Q
-    	msr APSR_nzcvq, r4	@ Store resultado de vuelta en APSR
+    	mrs r4, APSR			@ Carga APSR a registro de propósito general
+    	bfc r4, 27, 1			@ Modifica flag Q
+    	msr APSR_nzcvq, r4		@ Guarda resultado de vuelta en APSR
 
-    	mul12_bucle:
-    		ldrh	r4, [r0], #2
-    		mul 	r4, r3
-    		usat 	r4, #12, r4
-    		strh 	r4, [r1], #2
-    		subs 	r2, 1
-    		bne 	mul12_bucle
-    	pop {r4}		@ Recupera r4 antes de volver a la aplicación
+    asm_productoEscalar12_bucle:
+    	ldrh	r4, [r0], #2
+
+    	mul 	r4, r3
+    	usat 	r4, #12, r4		@ Aplica saturación a 12 bits (3 bytes)
+    	strh 	r4, [r1], #2
+
+    	subs 	r2, 1
+    	bne 	asm_productoEscalar12_bucle
+
+    asm_productoEscalar12_salir:
+    	pop {r4}
     	bx lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 5 en Assembly - Prototipo en "C":
+@   void asm_filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut,
+@								uint32_t longitudVectorIn);
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vectorIn (uint16_t)
+@   r1: dirección de memoria del inicio del vectorOut (uint16_t)
+@	r2: longitud de los vectores (uint32_t)
+@
+@ Registros utilizados:
+@	r3: acumulador de los valores a promediar
+@   r4: valor de cada elemento de vectorIn
+@	r5: índice para comparación de tamaño de ventana
+@   r6: registro auxiliar: promedio calculado en cada ciclo y resta con i
+
+.thumb_func
+    asm_filtroVentana10:
+    	push 	{r4-r6}
+
+		cmp 	r0, #0				@ vectorIn != NULL
+        beq 	asm_filtroVentana10_salir
+        cmp 	r1, #0				@ vectorOut != NULL
+        beq 	asm_filtroVentana10_salir
+
+		mov 	r3, #0				@ acumulador = 0
+		mov 	r5, #0				@ i = 0
+
+    asm_filtroVentana10_bucle:
+    	ldrh	r4, [r0], #2
+    	add 	r3, r4			@ acumulador += vectorIn[i]
+
+    	cmp		r5, #10			@ if (i >= tam_ventana) en cant. de elem.
+    	itt		ge				@ Las siguientes dos instrucciones solo se
+    							@ ejecutan cuando el índice es mayor que el
+    							@ tamaño de la ventana
+		ldrhge	r6, [r0, #-20] 	@ R6: vectorIn[i - tam_ventana] y tam_ventana
+								@ tiene 20 bytes porque cada elemento es de 2
+    	subge	r3, r3, r6 		@ R3: acumulador -= vectorIn[i - tam_ventana]
+
+		movw 	r6, #10			@ R6: cantidad de elementos de la ventana es 10
+    	udiv	r6, r3, r6		@ R6: acumulador / tam_ventana
+    	strh	r6, [r1], #2	@ vectorOut[i] = acumulador / tam_ventana
+
+    	add		r5, 1			@ i++
+
+    	subs 	r2, 1
+    	bne 	asm_filtroVentana10_bucle
+
+    asm_filtroVentana10_salir:
+    	pop {r4-r6}
+    	bx lr
+
+
+
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

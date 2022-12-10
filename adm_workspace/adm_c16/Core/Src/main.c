@@ -274,14 +274,30 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 	/** Parametrizar el tamaño de ventana permite hacer pruebas
 	 * con ventanas de pequeños tamaños
 	 */
-	uint8_t tam_ventana = 2;
+	uint8_t tam_ventana = 10;
 
+	/** Chequea que los punteros estén inicializados
+	 */
 	if (vectorIn != NULL && vectorOut != NULL) {
+
+		/** La ventana se va solapando de a un elemento con el vector de
+		 *  entrada, comenzando de la siguiente manera:
+		 *  i == 0 --> promedio = vectorIn[0] / 10
+		 *  i == 1 --> promedio = (vectorIn[0] + vectorIn[1]) / 10
+		 *  i == 2 --> promedio = (vectorIn[0] + vectorIn[1] + vectorIn[2]) / 10
+		 *
+		 *  Cuando el índice del último elemento es mayor al tamaño de ventana,
+		 *  cada paso que se avanza se debe restar el elemento de menor índice,
+		 *  que queda fuera de la ventana
+		 *
+		 *  El proceso se detiene cuando el índice de la ventana llega al tamaño
+		 *  del vector (la ventana no está centrada)
+				 */
 		for (uint32_t i = 0; i < longitudVectorIn; i++) {
 
 			acumulador += vectorIn[i];	// Agregar una nueva muestra
 
-			if (i >= tam_ventana) {			// A partir del tamaño de ventana
+			if (i >= tam_ventana) {						// A partir del tamaño de ventana
 				acumulador -= vectorIn[i - tam_ventana];// al avanzar resta la muestra que sobra
 			}
 
@@ -289,6 +305,7 @@ void filtroVentana10(uint16_t *vectorIn, uint16_t *vectorOut,
 		}
 	}
 }
+
 
 /* USER CODE END 0 */
 
@@ -353,8 +370,7 @@ int main(void) {
 	 */
 	uint32_t ej2_c_vector32In[] = { 5, 9, 25, 37, 1 };
 
-	uint32_t tam_vec_ej2_c = sizeof(ej2_c_vector32In)
-			/ sizeof(*ej2_c_vector32In);
+	uint32_t tam_vec_ej2_c = sizeof(ej2_c_vector32In) / sizeof(*ej2_c_vector32In);
 
 	uint32_t ej2_c_vector32Out[tam_vec_ej2_c];
 
@@ -394,12 +410,13 @@ int main(void) {
 
 	/*---------- INICIO Ejercicio 5 en C ----------*/
 
-#define VEC_SIZE_EJ5 10U
-	uint16_t ej5_c_vector16In[VEC_SIZE_EJ5] =
-			{ 2, 10, 10, 2, 2, 0, 0, 20, 20, 2 };
+#define VEC_SIZE_EJ5 14U
+	uint16_t ej5_c_vector16In[VEC_SIZE_EJ5] = { 2, 10, 10, 2, 2, 0, 0, 20, 20,
+			2, 2, 2, 2, 2 };
 	uint16_t ej5_c_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
 	filtroVentana10(ej5_c_vector16In, ej5_c_vector16Out, VEC_SIZE_EJ5);
+
 	/*------------ FIN Ejercicio 5 en C -----------*/
 
 	/** Aplicaciones para comprobar el correcto funcionamiento de
@@ -461,6 +478,18 @@ int main(void) {
 	asm_productoEscalar12(ej4_asm_vector16In, ej4_asm_vector16Out, 4, 2);
 
 	/*------------ FIN Ejercicio 4 en Assembly -----------*/
+
+	/*---------- INICIO Ejercicio 5 en Assembly ----------*/
+
+	uint16_t ej5_asm_vector16In[VEC_SIZE_EJ5] = { 2, 10, 10, 2, 2, 0, 0, 20, 20,
+			2, 2, 2, 2, 2 };
+	uint16_t ej5_asm_vector16Out[VEC_SIZE_EJ5] = { 0 };
+
+	asm_filtroVentana10(ej5_asm_vector16In, ej5_asm_vector16Out, VEC_SIZE_EJ5);
+
+
+
+	/*------------ FIN Ejercicio 5 en Assembly -----------*/
 
 	/* USER CODE END 2 */
 
