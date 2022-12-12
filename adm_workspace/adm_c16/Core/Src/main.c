@@ -177,6 +177,17 @@ void invertir(uint16_t *vector, uint32_t longitud);
  */
 void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud);
 
+/**
+ * @fn void uartsendString(uint8_t*)
+ * @brief Transmite cadenas de caracteres de tamaño variable terminadas en '\0'
+ *
+ * Función insegura. Aunque chequea que el buffer tenga espacio reservado,
+ * puede producir un buffer overflow si la cadena no está terminada en '\0'.
+ *
+ * @param pstring Cadena de caracteres válida a transmitir.
+ */
+void uartsendString(uint8_t *pstring);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -435,6 +446,18 @@ void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud){
 	}
 }
 
+// Ejercicio final - Función de comunicación sencilla
+void uartsendString(uint8_t *pstring) {
+	uint8_t buff_size;
+
+	if (pstring != NULL) {
+		buff_size = strlen((char*) pstring);
+		HAL_UART_Transmit(&huart3, pstring, buff_size, 0xffff);
+	}
+}
+
+
+
 /* USER CODE END 0 */
 
 /**
@@ -443,6 +466,7 @@ void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud){
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
+
 
 	/* USER CODE END 1 */
 
@@ -459,6 +483,9 @@ int main(void) {
 	SystemClock_Config();
 
 	/* USER CODE BEGIN SysInit */
+
+	// Activa contador de ciclos (iniciar una sola vez)
+	DWT->CTRL |= 1 << DWT_CTRL_CYCCNTENA_Pos;
 
 	/* USER CODE END SysInit */
 
@@ -533,7 +560,11 @@ int main(void) {
 
 	uint16_t ej4_c_vector16Out[tam_vec_ej4_c];
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	productoEscalar12(ej4_c_vector16In, ej4_c_vector16Out, tam_vec_ej4_c, 32);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos4C = DWT->CYCCNT;
 
 	/*------------ FIN Ejercicio 4 en C -----------*/
 
@@ -544,7 +575,11 @@ int main(void) {
 			2, 2, 2, 2, 2 };
 	uint16_t ej5_c_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	filtroVentana10(ej5_c_vector16In, ej5_c_vector16Out, VEC_SIZE_EJ5);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos5C = DWT->CYCCNT;
 
 	/*------------ FIN Ejercicio 5 en C -----------*/
 
@@ -601,7 +636,11 @@ int main(void) {
 		ej10_c_vector16In[i] = i;
 	}
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	eco(ej10_c_vector16In, ej10_c_vector16Out, VEC_SIZE_EJ10);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos10C = DWT->CYCCNT;
 
 
 	/*------------ FIN Ejercicio 10 en C -----------*/
@@ -662,7 +701,11 @@ int main(void) {
 	uint16_t ej4_asm_vector16In[4] = { 0xFFF0, 0xFFFF, 7, 8 };
 	uint16_t ej4_asm_vector16Out[4] = { 0 };
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	asm_productoEscalar12(ej4_asm_vector16In, ej4_asm_vector16Out, 4, 2);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos4ASM = DWT->CYCCNT;
 
 	/*------------ FIN Ejercicio 4 en Assembly -----------*/
 
@@ -672,7 +715,11 @@ int main(void) {
 			2, 2, 2, 2, 2 };
 	uint16_t ej5_asm_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	asm_filtroVentana10(ej5_asm_vector16In, ej5_asm_vector16Out, VEC_SIZE_EJ5);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos5ASM = DWT->CYCCNT;
 
 	/*------------ FIN Ejercicio 5 en Assembly -----------*/
 
@@ -730,7 +777,11 @@ int main(void) {
 		ej10_asm_vector16In[i] = i;
 	}
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	asm_eco(ej10_asm_vector16In, ej10_asm_vector16Out, VEC_SIZE_EJ10);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos10ASM = DWT->CYCCNT;
 
 
 	/*------------ FIN Ejercicio 10 en Assembly -----------*/
@@ -746,10 +797,48 @@ int main(void) {
 		ej10_asm_simd_vector16In[i] = i;
 	}
 
+    // Antes de la función a medir: contador de ciclos a cero
+    DWT->CYCCNT = 0;
 	asm_eco_simd(ej10_asm_simd_vector16In, ej10_asm_simd_vector16Out, VEC_SIZE_EJ10);
+	// Obtiene cantidad de ciclos que demoró la función
+	const volatile uint32_t Ciclos10SIMD = DWT->CYCCNT;
 
 
 	/*------------ FIN Ejercicio 10SIMD en Assembly -----------*/
+#define INIT_BUFF 10U
+	unsigned char sendBuff[INIT_BUFF] = {0};
+
+
+
+	uartsendString((uint8_t *)"---------------------------------------------------------\r\n");
+	uartsendString((uint8_t *)"            ARQUITECTURA DE MICROPROCESADORES\r\n");
+	uartsendString((uint8_t *)"---------------------------------------------------------\r\n\n");
+	uartsendString((uint8_t *)"Mediciones de performance de ejercicios seleccionados\r\n");
+
+	uartsendString((uint8_t *)"\r\n\n    ---- Ejercicio 4 ----    ");
+	uartsendString((uint8_t *)"\r\nEjercicio 4 en C:        ");
+	uartsendString((uint8_t *)itoa(Ciclos4C, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t *)"\r\nEjercicio 4 en Assembly: ");
+	uartsendString((uint8_t *)itoa(Ciclos4ASM, sendBuff, INIT_BUFF));
+
+	uartsendString((uint8_t *)"\r\n\n    ---- Ejercicio 5 ----    ");
+	uartsendString((uint8_t *)"\r\nEjercicio 5 en C:        ");
+	uartsendString((uint8_t *)itoa(Ciclos5C, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t *)"\r\nEjercicio 5 en Assembly: ");
+	uartsendString((uint8_t *)itoa(Ciclos5ASM, sendBuff, INIT_BUFF));
+
+	uartsendString((uint8_t *)"\r\n\n    ---- Ejercicio 10 ----    ");
+	uartsendString((uint8_t *)"\r\nEjercicio 10 en C:                 ");
+	uartsendString((uint8_t *)itoa(Ciclos10C, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t *)"\r\nEjercicio 10 en Assembly:          ");
+	uartsendString((uint8_t *)itoa(Ciclos10ASM, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t *)"\r\nEjercicio 10 en Assembly con SIMD: ");
+	uartsendString((uint8_t *)itoa(Ciclos10SIMD, sendBuff, INIT_BUFF));
+
+
+	uartsendString((uint8_t *)"\r\n");
+
+
 
 	/* USER CODE END 2 */
 

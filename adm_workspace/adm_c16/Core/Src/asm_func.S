@@ -433,9 +433,10 @@
     	bne 	asm_eco_bucle1		@ @ i<882
 
     	sub		r2, #882			@ Equivalente a uint32_t i = 882
+    	ldr		r3, =-1766			@
     asm_eco_bucle2:
     	ldrh	r4, [r0], #2		@ vectorIn[i]
-   		ldr		r3, =-1766			@
+
     	ldrh	r5, [r0, r3]		@ vector[i-882]
     	asr		r5, r5, #1			@ (vectorIn[i-882] / 2)
     	add		r4, r4, r5			@ vectorIn[i] + (vectorIn[i-882] / 2)
@@ -462,43 +463,44 @@
 @ Registros utilizados:
 @	r3: índice para recorrer los vectores
 @   r4: valor de cada elemento de vectorIn
+@	r5: valor de cada elemento de vectorIn-882
+@	r6: Siempre "0". Se porque shadd16 require 2 registros para hacer suma con
+@	    división por 2.
 
 .thumb_func
     asm_eco_simd:
-    	push 	{r4-r5}
+    	push 	{r4-r6}
 
 		cmp 	r0, #0				@ vectorIn != NULL
         beq 	asm_eco_simd_salir
         cmp 	r1, #0				@ vectorOut != NULL
         beq 	asm_eco_simd_salir
 
-		movw	r3, #882			@ Equivalente a uint32_t i=0. Toma los datos de a 4
-    asm_eco_simd_bucle1:			@ bytes (2 valores de 16 bits) por lo que se cuenta la mitad
+		movw	r3, #882			@ Equivalente a uint32_t i=0. Toma los
+    asm_eco_simd_bucle1:			@ datos de a 4 bytes (2 valores de 16 bits)
     	ldr		r4, [r0], #4		@ vectorIn[i]
     	str		r4, [r1], #4		@ vectorOut[i] = vectorIn[i];
 
-    	subs 	r3, 2				@ i++
+    	subs 	r3, 2				@ Equivale a i++, pero de a 2 elementos
     	bne 	asm_eco_simd_bucle1	@ @ i<882
 
     	sub		r2, #441			@ Equivalente a uint32_t i = 882 / 2
+    	ldr		r3, =-1768			@ Equivalente a i-882
+    	movw	r6, #0
     asm_eco_simd_bucle2:
     	ldr		r4, [r0], #4		@ vectorIn[i]
-
-    	ldr		r3, =-1768			@
     	ldr		r5, [r0, r3]		@ vector[i-882]
 
-		movw	r3, #0
-		shadd16	r5, r5, r3			@ (vectorIn[i-882] / 2)
-
+		shadd16	r5, r5, r6			@ (vectorIn[i-882] / 2)
     	sadd16	r4, r4, r5			@ vectorIn[i] + (vectorIn[i-882] / 2)
 
-    	str	r4, [r1], #4		@ vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
+    	str	r4, [r1], #4			@ vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
 
     	subs 	r2, 1
     	bne 	asm_eco_simd_bucle2
 
     asm_eco_simd_salir:
-    	pop 	{r4-r5}
+    	pop 	{r4-r6}
     	bx 		lr
 
 
