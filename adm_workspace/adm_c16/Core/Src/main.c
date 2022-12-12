@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
+#include "stdlib.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -633,6 +634,9 @@ int main(void) {
 	 * Vector inicializado con una rampa suave
 		 */
 	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
+		if(i % 3){
+			ej10_c_vector16In[i] = i*(-7);
+		}
 		ej10_c_vector16In[i] = i;
 	}
 
@@ -698,12 +702,12 @@ int main(void) {
 	/** Valores de prueba para chequear el reslutado del producto
 	 *  y si satura al producirse desborde
 	 */
-	uint16_t ej4_asm_vector16In[4] = { 0xFFF0, 0xFFFF, 7, 8 };
-	uint16_t ej4_asm_vector16Out[4] = { 0 };
+	uint16_t ej4_asm_vector16In[5] = { 0xFF0, 9, 25, 37, 1 };
+	uint16_t ej4_asm_vector16Out[5] = { 0 };
 
     // Antes de la función a medir: contador de ciclos a cero
     DWT->CYCCNT = 0;
-	asm_productoEscalar12(ej4_asm_vector16In, ej4_asm_vector16Out, 4, 2);
+	asm_productoEscalar12(ej4_asm_vector16In, ej4_asm_vector16Out, 5, 2);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos4ASM = DWT->CYCCNT;
 
@@ -774,7 +778,10 @@ int main(void) {
 	 * Vector inicializado con una rampa suave
 		 */
 	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
-		ej10_asm_vector16In[i] = i;
+		if(i % 3){
+			ej10_c_vector16In[i] = i*(-7);
+		}
+		ej10_c_vector16In[i] = i;
 	}
 
     // Antes de la función a medir: contador de ciclos a cero
@@ -794,7 +801,10 @@ int main(void) {
 	 * Vector inicializado con una rampa suave
 		 */
 	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
-		ej10_asm_simd_vector16In[i] = i;
+		if(i % 3){
+			ej10_c_vector16In[i] = i*(-7);
+		}
+		ej10_c_vector16In[i] = i;
 	}
 
     // Antes de la función a medir: contador de ciclos a cero
@@ -806,7 +816,7 @@ int main(void) {
 
 	/*------------ FIN Ejercicio 10SIMD en Assembly -----------*/
 #define INIT_BUFF 10U
-	unsigned char sendBuff[INIT_BUFF] = {0};
+	char sendBuff[INIT_BUFF] = {0};
 
 
 
