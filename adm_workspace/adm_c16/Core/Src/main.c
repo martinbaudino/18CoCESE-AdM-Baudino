@@ -719,7 +719,7 @@ int main(void) {
 
 	/*------------ FIN Ejercicio 9 en Assembly -----------*/
 
-	/*---------- INICIO Ejercicio 10 en C ----------*/
+	/*---------- INICIO Ejercicio 10 en Assembly ----------*/
 	int16_t ej10_asm_vector16In[VEC_SIZE_EJ10] = { 0 };
 	int16_t ej10_asm_vector16Out[VEC_SIZE_EJ10] = { 0 };
 
@@ -733,7 +733,23 @@ int main(void) {
 	asm_eco(ej10_asm_vector16In, ej10_asm_vector16Out, VEC_SIZE_EJ10);
 
 
-	/*------------ FIN Ejercicio 10 en C -----------*/
+	/*------------ FIN Ejercicio 10 en Assembly -----------*/
+
+	/*---------- INICIO Ejercicio 10SIMD en Assembly ----------*/
+	int16_t ej10_asm_simd_vector16In[VEC_SIZE_EJ10] = { 0 };
+	int16_t ej10_asm_simd_vector16Out[VEC_SIZE_EJ10] = { 0 };
+
+	/**
+	 * Vector inicializado con una rampa suave
+		 */
+	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
+		ej10_asm_simd_vector16In[i] = i;
+	}
+
+	asm_eco_simd(ej10_asm_simd_vector16In, ej10_asm_simd_vector16Out, VEC_SIZE_EJ10);
+
+
+	/*------------ FIN Ejercicio 10SIMD en Assembly -----------*/
 
 	/* USER CODE END 2 */
 

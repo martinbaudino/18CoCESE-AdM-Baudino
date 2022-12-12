@@ -36,6 +36,9 @@
 @ Ejercicio 10 en Assembly
 .global asm_eco
 
+@ Ejercicio 10 en Assembly con SIMD
+.global asm_eco_simd
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
 @   void asm_svc (void)
@@ -400,7 +403,7 @@
     	bx 		lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@ Ejercicio 10 en Assembly - Prototipo en "C":
+@ Ejercicio 10 en Assembly Tradicional - Prototipo en "C":
 @   void asm_eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud);
 @
 @ Parametros recibidos:
@@ -414,14 +417,14 @@
 
 .thumb_func
     asm_eco:
-    	push 	{r4-r6}
+    	push 	{r4-r5}
 
 		cmp 	r0, #0				@ vectorIn != NULL
         beq 	asm_eco_salir
         cmp 	r1, #0				@ vectorOut != NULL
         beq 	asm_eco_salir
 
-		movw	r3, #881			@ Equivalente a uint32_t i=0
+		movw	r3, #882			@ Equivalente a uint32_t i=0
     asm_eco_bucle1:
     	ldrh	r4, [r0], #2		@ vectorIn[i]
     	strh	r4, [r1], #2		@ vectorOut[i] = vectorIn[i];
@@ -429,13 +432,12 @@
     	subs 	r3, 1				@ i++
     	bne 	asm_eco_bucle1		@ @ i<882
 
-    	sub		r2, #881			@ Equivalente a uint32_t i = 882
+    	sub		r2, #882			@ Equivalente a uint32_t i = 882
     asm_eco_bucle2:
     	ldrh	r4, [r0], #2		@ vectorIn[i]
-    	ldr		r3, =-1762			@
+   		ldr		r3, =-1766			@
     	ldrh	r5, [r0, r3]		@ vector[i-882]
-    	movw	r3, #2				@ 2
-    	sdiv	r5, r5, r3			@ (vectorIn[i-882] / 2)
+    	asr		r5, r5, #1			@ (vectorIn[i-882] / 2)
     	add		r4, r4, r5			@ vectorIn[i] + (vectorIn[i-882] / 2)
 
     	strh	r4, [r1], #2		@ vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
@@ -444,8 +446,61 @@
     	bne 	asm_eco_bucle2
 
     asm_eco_salir:
-    	pop 	{r4-r6}
+    	pop 	{r4-r5}
     	bx 		lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Ejercicio 10 en Assembly con SIMD - Prototipo en "C":
+@   void asm_eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: dirección de memoria del inicio del vectorIn (uint32_t)
+@   r1: dirección de memoria del inicio del vectorOut (uint16_t)
+@	r2: longitud de los vectores (uint32_t)
+@
+@ Registros utilizados:
+@	r3: índice para recorrer los vectores
+@   r4: valor de cada elemento de vectorIn
+
+.thumb_func
+    asm_eco_simd:
+    	push 	{r4-r5}
+
+		cmp 	r0, #0				@ vectorIn != NULL
+        beq 	asm_eco_simd_salir
+        cmp 	r1, #0				@ vectorOut != NULL
+        beq 	asm_eco_simd_salir
+
+		movw	r3, #882			@ Equivalente a uint32_t i=0. Toma los datos de a 4
+    asm_eco_simd_bucle1:			@ bytes (2 valores de 16 bits) por lo que se cuenta la mitad
+    	ldr		r4, [r0], #4		@ vectorIn[i]
+    	str		r4, [r1], #4		@ vectorOut[i] = vectorIn[i];
+
+    	subs 	r3, 2				@ i++
+    	bne 	asm_eco_simd_bucle1	@ @ i<882
+
+    	sub		r2, #441			@ Equivalente a uint32_t i = 882 / 2
+    asm_eco_simd_bucle2:
+    	ldr		r4, [r0], #4		@ vectorIn[i]
+
+    	ldr		r3, =-1768			@
+    	ldr		r5, [r0, r3]		@ vector[i-882]
+
+		movw	r3, #0
+		shadd16	r5, r5, r3			@ (vectorIn[i-882] / 2)
+
+    	sadd16	r4, r4, r5			@ vectorIn[i] + (vectorIn[i-882] / 2)
+
+    	str	r4, [r1], #4		@ vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
+
+    	subs 	r2, 1
+    	bne 	asm_eco_simd_bucle2
+
+    asm_eco_simd_salir:
+    	pop 	{r4-r5}
+    	bx 		lr
+
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
