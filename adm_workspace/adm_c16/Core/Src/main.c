@@ -426,7 +426,7 @@ void invertir(uint16_t *vector, uint32_t longitud) {
 }
 
 // Ejercicio 10 en C en C - Definición de función
-void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud){
+void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud) {
 	/**
 	 * Las muestras de audio fueron tomadas a 44.100 muestras/s
 	 * El eco comienza a escucharse a partir de los 20ms, es decir
@@ -436,13 +436,13 @@ void eco(int16_t *vectorIn, int16_t *vectorOut, uint32_t longitud){
 	 *
 	 * vout[i] = vin[i] + 1/2 * vin[i-882] para 882 <= i <4096
 	 *
-		 */
+	 */
 	if (vectorIn != NULL && vectorOut != NULL) {
-		for(uint32_t i=0; i<882; i++){
+		for (uint32_t i = 0; i < 882; i++) {
 			vectorOut[i] = vectorIn[i];
 		}
-		for(uint32_t i = 882; i < longitud; i++){
-			vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
+		for (uint32_t i = 882; i < longitud; i++) {
+			vectorOut[i] = vectorIn[i] + (vectorIn[i - 882] / 2);
 		}
 	}
 }
@@ -457,8 +457,6 @@ void uartsendString(uint8_t *pstring) {
 	}
 }
 
-
-
 /* USER CODE END 0 */
 
 /**
@@ -467,7 +465,6 @@ void uartsendString(uint8_t *pstring) {
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
-
 
 	/* USER CODE END 1 */
 
@@ -554,16 +551,17 @@ int main(void) {
 	/** Valores de prueba para chequear el reslutado del producto
 	 *  y si se producen desbordes
 	 */
-	uint16_t ej4_c_vector16In[] = { 0xFF0, 9, 25, 37, 1 };
+	uint16_t ej4_c_vector16In[] = { 0xFF0, 9, 25, 37, 1, 17, 9, 900, 3000,
+			300, 2, 10, 10, 2, 2, 0, 0, 20, 20, 2, 2, 2, 2, 2 };
 
 	uint32_t tam_vec_ej4_c = sizeof(ej4_c_vector16In)
 			/ sizeof(*ej4_c_vector16In);
 
 	uint16_t ej4_c_vector16Out[tam_vec_ej4_c];
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
-	productoEscalar12(ej4_c_vector16In, ej4_c_vector16Out, tam_vec_ej4_c, 32);
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
+	productoEscalar12(ej4_c_vector16In, ej4_c_vector16Out, tam_vec_ej4_c, 17);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos4C = DWT->CYCCNT;
 
@@ -576,8 +574,8 @@ int main(void) {
 			2, 2, 2, 2, 2 };
 	uint16_t ej5_c_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
 	filtroVentana10(ej5_c_vector16In, ej5_c_vector16Out, VEC_SIZE_EJ5);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos5C = DWT->CYCCNT;
@@ -615,14 +613,12 @@ int main(void) {
 	/*------------ FIN Ejercicio 8 en C -----------*/
 
 	/*---------- INICIO Ejercicio 9 en C ----------*/
-	uint16_t ej9_c_vector16In[VEC_SIZE_EJ5] = { 1, 2, 3, 4,
-			5, 6, 7, 8, 9, 10, 11, 12,
-			13, 14 };
+	uint16_t ej9_c_vector16In[VEC_SIZE_EJ5] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+			11, 12, 13, 14 };
 
 	invertir(ej9_c_vector16In, VEC_SIZE_EJ5);
 
 	/*------------ FIN Ejercicio 9 en C -----------*/
-
 
 	/*---------- INICIO Ejercicio 10 en C ----------*/
 #define VEC_SIZE_EJ10 4096U
@@ -632,20 +628,16 @@ int main(void) {
 
 	/**
 	 * Vector inicializado con una rampa suave
-		 */
-	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
-		if(i % 3){
-			ej10_c_vector16In[i] = i*(-7);
-		}
+	 */
+	for (uint32_t i = 0; i < VEC_SIZE_EJ10; i++) {
 		ej10_c_vector16In[i] = i;
 	}
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
 	eco(ej10_c_vector16In, ej10_c_vector16Out, VEC_SIZE_EJ10);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos10C = DWT->CYCCNT;
-
 
 	/*------------ FIN Ejercicio 10 en C -----------*/
 
@@ -702,12 +694,19 @@ int main(void) {
 	/** Valores de prueba para chequear el reslutado del producto
 	 *  y si satura al producirse desborde
 	 */
-	uint16_t ej4_asm_vector16In[5] = { 0xFF0, 9, 25, 37, 1 };
-	uint16_t ej4_asm_vector16Out[5] = { 0 };
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
-	asm_productoEscalar12(ej4_asm_vector16In, ej4_asm_vector16Out, 5, 2);
+	uint16_t ej4_asm_vector16In[] = { 0xFF0, 9, 25, 37, 1, 17, 9, 900, 3000,
+			300, 2, 10, 10, 2, 2, 0, 0, 20, 20, 2, 2, 2, 2, 2 };
+
+	uint32_t tam_vec_ej4_asm = sizeof(ej4_asm_vector16In)
+			/ sizeof(*ej4_asm_vector16In);
+
+	uint16_t ej4_asm_vector16Out[tam_vec_ej4_asm];
+
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
+	asm_productoEscalar12(ej4_asm_vector16In, ej4_asm_vector16Out,
+			tam_vec_ej4_asm, 17);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos4ASM = DWT->CYCCNT;
 
@@ -719,8 +718,8 @@ int main(void) {
 			2, 2, 2, 2, 2 };
 	uint16_t ej5_asm_vector16Out[VEC_SIZE_EJ5] = { 0 };
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
 	asm_filtroVentana10(ej5_asm_vector16In, ej5_asm_vector16Out, VEC_SIZE_EJ5);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos5ASM = DWT->CYCCNT;
@@ -762,93 +761,84 @@ int main(void) {
 	/*------------ FIN Ejercicio 8 en Assembly -----------*/
 
 	/*---------- INICIO Ejercicio 9 en Assembly ----------*/
-	uint16_t ej9_asm_vector16In[VEC_SIZE_EJ5] = { 1, 2, 3, 4,
-			5, 6, 7, 8, 9, 10, 11, 12,
-			13, 14 };
+	uint16_t ej9_asm_vector16In[VEC_SIZE_EJ5] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+			11, 12, 13, 14 };
 
 	asm_invertir(ej9_asm_vector16In, VEC_SIZE_EJ5);
 
 	/*------------ FIN Ejercicio 9 en Assembly -----------*/
 
 	/*---------- INICIO Ejercicio 10 en Assembly ----------*/
-	int16_t ej10_asm_vector16In[VEC_SIZE_EJ10] = { 0 };
-	int16_t ej10_asm_vector16Out[VEC_SIZE_EJ10] = { 0 };
+	int16_t ej10_asm_vector16In[VEC_SIZE_EJ10 + 5U] = { 0 };
+	int16_t ej10_asm_vector16Out[VEC_SIZE_EJ10 + 5U] = { 0 };
 
 	/**
 	 * Vector inicializado con una rampa suave
-		 */
-	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
-		if(i % 3){
-			ej10_c_vector16In[i] = i*(-7);
-		}
-		ej10_c_vector16In[i] = i;
+	 */
+	for (uint32_t i = 0; i < VEC_SIZE_EJ10; i++) {
+		ej10_asm_vector16In[i] = i;
 	}
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
 	asm_eco(ej10_asm_vector16In, ej10_asm_vector16Out, VEC_SIZE_EJ10);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos10ASM = DWT->CYCCNT;
 
-
 	/*------------ FIN Ejercicio 10 en Assembly -----------*/
 
 	/*---------- INICIO Ejercicio 10SIMD en Assembly ----------*/
-	int16_t ej10_asm_simd_vector16In[VEC_SIZE_EJ10] = { 0 };
-	int16_t ej10_asm_simd_vector16Out[VEC_SIZE_EJ10] = { 0 };
+	int16_t ej10_asm_simd_vector16In[VEC_SIZE_EJ10 + 5U] = { 0 };
+	int16_t ej10_asm_simd_vector16Out[VEC_SIZE_EJ10 + 5U] = { 0 };
 
 	/**
 	 * Vector inicializado con una rampa suave
-		 */
-	for( uint32_t i = 0; i < VEC_SIZE_EJ10; i++){
-		if(i % 3){
-			ej10_c_vector16In[i] = i*(-7);
-		}
-		ej10_c_vector16In[i] = i;
+	 */
+	for (uint32_t i = 0; i < VEC_SIZE_EJ10; i++) {
+		ej10_asm_simd_vector16In[i] = i;
 	}
 
-    // Antes de la función a medir: contador de ciclos a cero
-    DWT->CYCCNT = 0;
-	asm_eco_simd(ej10_asm_simd_vector16In, ej10_asm_simd_vector16Out, VEC_SIZE_EJ10);
+	// Antes de la función a medir: contador de ciclos a cero
+	DWT->CYCCNT = 0;
+	asm_eco_simd(ej10_asm_simd_vector16In, ej10_asm_simd_vector16Out,
+			VEC_SIZE_EJ10);
 	// Obtiene cantidad de ciclos que demoró la función
 	const volatile uint32_t Ciclos10SIMD = DWT->CYCCNT;
 
-
 	/*------------ FIN Ejercicio 10SIMD en Assembly -----------*/
 #define INIT_BUFF 10U
-	char sendBuff[INIT_BUFF] = {0};
+	char sendBuff[INIT_BUFF] = { 0 };
 
+	uartsendString(
+			(uint8_t*) "---------------------------------------------------------\r\n");
+	uartsendString(
+			(uint8_t*) "            ARQUITECTURA DE MICROPROCESADORES\r\n");
+	uartsendString(
+			(uint8_t*) "---------------------------------------------------------\r\n\n");
+	uartsendString(
+			(uint8_t*) "Mediciones de performance de ejercicios seleccionados\r\n");
 
+	uartsendString((uint8_t*) "\r\n\n    ---- Ejercicio 4 ----    ");
+	uartsendString((uint8_t*) "\r\nEjercicio 4 en C:        ");
+	uartsendString((uint8_t*) itoa(Ciclos4C, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t*) "\r\nEjercicio 4 en Assembly: ");
+	uartsendString((uint8_t*) itoa(Ciclos4ASM, sendBuff, INIT_BUFF));
 
-	uartsendString((uint8_t *)"---------------------------------------------------------\r\n");
-	uartsendString((uint8_t *)"            ARQUITECTURA DE MICROPROCESADORES\r\n");
-	uartsendString((uint8_t *)"---------------------------------------------------------\r\n\n");
-	uartsendString((uint8_t *)"Mediciones de performance de ejercicios seleccionados\r\n");
+	uartsendString((uint8_t*) "\r\n\n    ---- Ejercicio 5 ----    ");
+	uartsendString((uint8_t*) "\r\nEjercicio 5 en C:        ");
+	uartsendString((uint8_t*) itoa(Ciclos5C, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t*) "\r\nEjercicio 5 en Assembly: ");
+	uartsendString((uint8_t*) itoa(Ciclos5ASM, sendBuff, INIT_BUFF));
 
-	uartsendString((uint8_t *)"\r\n\n    ---- Ejercicio 4 ----    ");
-	uartsendString((uint8_t *)"\r\nEjercicio 4 en C:        ");
-	uartsendString((uint8_t *)itoa(Ciclos4C, sendBuff, INIT_BUFF));
-	uartsendString((uint8_t *)"\r\nEjercicio 4 en Assembly: ");
-	uartsendString((uint8_t *)itoa(Ciclos4ASM, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t*) "\r\n\n    ---- Ejercicio 10 ----    ");
+	uartsendString((uint8_t*) "\r\nEjercicio 10 en C:                 ");
+	uartsendString((uint8_t*) itoa(Ciclos10C, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t*) "\r\nEjercicio 10 en Assembly:          ");
+	uartsendString((uint8_t*) itoa(Ciclos10ASM, sendBuff, INIT_BUFF));
+	uartsendString((uint8_t*) "\r\nEjercicio 10 en Assembly con SIMD: ");
+	uartsendString((uint8_t*) itoa(Ciclos10SIMD, sendBuff, INIT_BUFF));
 
-	uartsendString((uint8_t *)"\r\n\n    ---- Ejercicio 5 ----    ");
-	uartsendString((uint8_t *)"\r\nEjercicio 5 en C:        ");
-	uartsendString((uint8_t *)itoa(Ciclos5C, sendBuff, INIT_BUFF));
-	uartsendString((uint8_t *)"\r\nEjercicio 5 en Assembly: ");
-	uartsendString((uint8_t *)itoa(Ciclos5ASM, sendBuff, INIT_BUFF));
-
-	uartsendString((uint8_t *)"\r\n\n    ---- Ejercicio 10 ----    ");
-	uartsendString((uint8_t *)"\r\nEjercicio 10 en C:                 ");
-	uartsendString((uint8_t *)itoa(Ciclos10C, sendBuff, INIT_BUFF));
-	uartsendString((uint8_t *)"\r\nEjercicio 10 en Assembly:          ");
-	uartsendString((uint8_t *)itoa(Ciclos10ASM, sendBuff, INIT_BUFF));
-	uartsendString((uint8_t *)"\r\nEjercicio 10 en Assembly con SIMD: ");
-	uartsendString((uint8_t *)itoa(Ciclos10SIMD, sendBuff, INIT_BUFF));
-
-
-	uartsendString((uint8_t *)"\r\n");
-
-
+	uartsendString((uint8_t*) "\r\n");
 
 	/* USER CODE END 2 */
 
@@ -856,6 +846,10 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		/* USER CODE END WHILE */
+		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+		HAL_Delay(500);
+		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+		HAL_Delay(500);
 
 		/* USER CODE BEGIN 3 */
 	}

@@ -484,8 +484,8 @@
     	subs 	r3, 2				@ Equivale a i++, pero de a 2 elementos
     	bne 	asm_eco_simd_bucle1	@ @ i<882
 
-    	sub		r2, #441			@ Equivalente a uint32_t i = 882 / 2
-    	ldr		r3, =-1768			@ Equivalente a i-882
+    	sub		r2, #882			@ Equivalente a uint32_t i = 882 / 2
+    	ldr		r3, =-1768			@ Equivalente a i-882 pero en bytes (1768 bytes)
     	movw	r6, #0
     asm_eco_simd_bucle2:
     	ldr		r4, [r0], #4		@ vectorIn[i]
@@ -496,7 +496,7 @@
 
     	str	r4, [r1], #4			@ vectorOut[i] = vectorIn[i] + (vectorIn[i-882] / 2);
 
-    	subs 	r2, 1
+    	subs 	r2, 2				@ Acá también va de a 2 elementos!!!
     	bne 	asm_eco_simd_bucle2
 
     asm_eco_simd_salir:
